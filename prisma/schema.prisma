@@ -1,0 +1,127 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id                String @id @default(auto()) @map("_id") @db.ObjectId
+  name            String?
+  email           String     @unique
+  image           String?
+  hashedPassword  String?
+  notification    Boolean?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  listings        Listing[]
+  reservations    Reservation[]
+  user            User[]
+  rating          Rating[]
+  notifi          Notification[]
+}
+
+model User {
+  id                String @id @default(auto()) @map("_id") @db.ObjectId
+  name              String?
+  email             String?   @unique
+  image             String?
+  notification      Boolean?
+  hashedPassword    String?
+  description       String?     
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  favoriteIds       String[] @db.ObjectId
+  accounts          Account[]
+  reservations      Reservation[]
+  notifi            Notification[]
+  rating            Rating[]
+  adminId           String?     @db.ObjectId
+  admin             Admin?      @relation(fields: [adminId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                 String @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String   @db.ObjectId
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.String
+  access_token       String?  @db.String
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.String
+  session_state      String?
+  user               User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
+}
+
+model Listing {
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  title           String
+  description     String
+  imageSrc        String[] 
+  fasilitas       String[]
+  createdAt       DateTime @default(now())
+  category        String
+  roomCount       Int
+  guestCount      Int
+  price           Int
+  reservations    Reservation[]
+  notifi          Notification[]
+  rating          Rating[]
+  adminId         String?     @db.ObjectId
+  admin           Admin?      @relation(fields: [adminId], references: [id], onDelete: Cascade)
+}
+
+model Reservation {
+  id              String             @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String   @db.ObjectId
+  listingId       String @db.ObjectId  
+  startDate       DateTime
+  endDate         DateTime
+  totalPrice      Int
+  status          String?
+  guestName       String?
+  guestImage      String?
+  createdAt       DateTime @default(now())
+  notifi          Notification[]
+  user            User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing         Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  adminId         String?     @db.ObjectId
+  admin           Admin?      @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+}
+
+model Notification{
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String?        @db.ObjectId
+  listingId       String?        @db.ObjectId  
+  message         String
+  guestName       String?
+  guestImage      String?
+  createdAt       DateTime       @default(now())
+  user            User?          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing         Listing?       @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  adminId         String?       @db.ObjectId
+  admin           Admin?        @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  reservationId   String?        @db.ObjectId
+  reservation     Reservation?   @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+}
+
+model Rating{
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  value           Int
+  userId          String?        @db.ObjectId
+  listingId       String?        @db.ObjectId  
+  message         String
+  guestName       String?
+  guestImage      String?
+  user            User?          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing         Listing?       @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  adminId         String?       @db.ObjectId
+  admin           Admin?        @relation(fields: [adminId], references: [id], onDelete: Cascade)
+}
