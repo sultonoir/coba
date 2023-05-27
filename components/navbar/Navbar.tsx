@@ -3,19 +3,12 @@ import React from "react";
 import Container from "../shared/Container";
 import Logo from "./Logo";
 import UserMenu from "./UserMenu";
-import {
-  SafeAdmin,
-  SafeNotifications,
-  SafeReservation,
-  SafeUser,
-} from "@/types";
-import Categories from "./Categories";
+import { SafeAdmin, SafeNotifications, SafeUser } from "@/types";
 import AdminMenu from "../admin/AdminMenu";
-import Button from "../shared/Button";
-import useRegisterModal from "@/hooks/useRegisterModal";
 import { Navlink } from "../admin/Navlink";
 import { NavItem } from "@/types";
 import { adminNav } from "@/types";
+import useLoginModal from "@/hooks/useLoginModal";
 
 interface navbarProps {
   currentUser: SafeUser | null;
@@ -28,7 +21,7 @@ const navbar: React.FC<navbarProps> = ({
   notifications,
   admin,
 }) => {
-  const registerModal = useRegisterModal();
+  const loginModal = useLoginModal();
   return (
     <div className="fixed w-full bg-white z-50 shadow-sm">
       <div className="py-4 border-b-[1px]">
@@ -48,9 +41,12 @@ const navbar: React.FC<navbarProps> = ({
               />
             )}
             {!currentUser && !admin && (
-              <div className="w-5">
-                <Button onClick={registerModal.onOpen} />
-              </div>
+              <button
+                className="px-2 py-1 bg-rose-500 text-white hover:bg-rose-600 active:scale-90 transition rounded-lg"
+                onClick={loginModal.onOpen}
+              >
+                Login
+              </button>
             )}
           </div>
         </Container>

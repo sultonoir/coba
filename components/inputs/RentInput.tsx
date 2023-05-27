@@ -14,7 +14,7 @@ const RentInput = () => {
       />
       <button
         onClick={rentmodal.onOpen}
-        className="bg-rose-500 p-2 rounded-full flex flex-row gap-1 items-center justify-center text-foreground active:scale-90 transition"
+        className="bg-gold p-2 rounded-full flex flex-row gap-1 items-center justify-center text-foreground active:scale-90 transition hover:text-white"
       >
         <AiOutlinePlusCircle size={24} />
         property

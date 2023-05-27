@@ -18,7 +18,7 @@ export default async function getNotifications(params: IParams) {
   }
 
   if (authorId) {
-    query.listing = { userId: authorId };
+    query.listing = { adminId: authorId };
   }
 
   try {

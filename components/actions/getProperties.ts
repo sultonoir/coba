@@ -2,15 +2,15 @@ import prisma from "@/libs/prisma";
 import { NextResponse } from "next/server";
 
 interface IParams {
-  userId: string;
+  adminId: string;
 }
 
 export default async function getProperties(params: IParams) {
-  const { userId } = params;
+  const { adminId } = params;
   try {
     const listings = await prisma.listing.findMany({
       where: {
-        userId: userId,
+        adminId: adminId,
       },
       orderBy: {
         createdAt: "desc",

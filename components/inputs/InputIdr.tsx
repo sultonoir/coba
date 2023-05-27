@@ -5,7 +5,6 @@ import { BiDollar } from "react-icons/bi";
 
 interface InputIdrProps {
   id: string;
-  label: string;
   type?: string;
   disabled?: boolean;
   formatPrice?: boolean;
@@ -16,7 +15,6 @@ interface InputIdrProps {
 
 const InputIdr: React.FC<InputIdrProps> = ({
   id,
-  label,
   type = "text",
   disabled,
   formatPrice,
@@ -27,6 +25,8 @@ const InputIdr: React.FC<InputIdrProps> = ({
   return (
     <label className="relative block">
       <input
+        min={0}
+        max={100}
         id={id}
         disabled={disabled}
         {...register(id, { required })}
@@ -54,8 +54,8 @@ const InputIdr: React.FC<InputIdrProps> = ({
     `}
       />
       {formatPrice && (
-        <span className="absolute top-[25px] left-[10px] text-secondary">
-          RP.
+        <span className="absolute top-[25px] right-[10px] text-secondary">
+          %
         </span>
       )}
     </label>

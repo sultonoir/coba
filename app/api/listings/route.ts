@@ -16,9 +16,11 @@ export async function POST(request: Request) {
     price,
     roomCount,
     guestCount,
-    category,
     fasilitas,
+    bed,
+    additional,
   } = body;
+
   const listings = await prisma.listing.create({
     data: {
       imageSrc: img,
@@ -27,8 +29,12 @@ export async function POST(request: Request) {
       price: parseInt(price, 10),
       roomCount: parseInt(roomCount, 10),
       guestCount: parseInt(guestCount, 10),
-      category,
+      bed: parseInt(bed, 10),
       fasilitas,
+      adminId: admin.id,
+      additional: {
+        create: additional,
+      },
     },
   });
   await stripe.products.create({
@@ -38,7 +44,7 @@ export async function POST(request: Request) {
       userId: admin.id,
     },
     default_price_data: {
-      currency: "idr",
+      currency: "usd",
       unit_amount: parseInt(price, 10),
     },
   });

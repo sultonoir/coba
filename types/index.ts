@@ -4,10 +4,12 @@ import {
   User,
   Notification,
   Admin,
+  Additional,
 } from "@prisma/client";
 
 export type SafeListing = Omit<Listing, "createdAt"> & {
   createdAt: string;
+  additional: Additional[];
 };
 
 export type SafeNotifications = Omit<Notification, "createdAt"> & {
@@ -54,6 +56,10 @@ export const adminNav = [
   {
     title: "Reservation",
     href: "/admin/Reservation",
+  },
+  {
+    title: "Properti",
+    href: "/admin/properti",
   },
 ];
 

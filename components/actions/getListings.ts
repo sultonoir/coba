@@ -1,7 +1,7 @@
 import prisma from "@/libs/prisma";
 
 export interface IListingsParams {
-  userId?: string;
+  adminId?: string;
   guestCount?: number;
   roomCount?: number;
   bathroomCount?: number;
@@ -14,7 +14,7 @@ export interface IListingsParams {
 export default async function getListings(params: IListingsParams) {
   try {
     const {
-      userId,
+      adminId,
       roomCount,
       guestCount,
       bathroomCount,
@@ -26,8 +26,8 @@ export default async function getListings(params: IListingsParams) {
 
     let query: any = {};
 
-    if (userId) {
-      query.userId = userId;
+    if (adminId) {
+      query.adminId = adminId;
     }
 
     if (category) {
@@ -77,17 +77,18 @@ export default async function getListings(params: IListingsParams) {
 
     const listings = await prisma.listing.findMany({
       where: query,
+      include: {
+        additional: true,
+      },
       orderBy: {
         createdAt: "desc",
       },
     });
 
-    const safeListings = listings
-      .filter((listing) => listing.status !== "break")
-      .map((listing) => ({
-        ...listing,
-        createdAt: listing.createdAt.toISOString(),
-      }));
+    const safeListings = listings.map((listing) => ({
+      ...listing,
+      createdAt: listing.createdAt.toISOString(),
+    }));
 
     return safeListings;
   } catch (error: any) {

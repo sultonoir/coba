@@ -1,31 +1,30 @@
 import React, { useState } from "react";
 
-interface NearTourProps {
-  value: any[];
+interface FacilityProps {
+  value: string[];
   onChange: (value: string[]) => void;
 }
 
-const NearTour: React.FC<NearTourProps> = ({ value, onChange }) => {
-  const [todos, setTodos] = useState(value);
-  const [cost, setCost] = useState("");
-  const [newTodo, setNewTodo] = useState("");
+const Facility: React.FC<FacilityProps> = ({ value, onChange }) => {
+  const [todos, setTodos] = useState(value); // State untuk menyimpan daftar todos
+  const [newTodo, setNewTodo] = useState(""); // State untuk nilai baru yang akan ditambahkan
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewTodo(event.target.value);
+    setNewTodo(event.target.value); // Memperbarui nilai state newTodo saat input berubah
   };
 
   const handleAddTodo = () => {
+    // Menambahkan nilai baru ke dalam array todos
     if (newTodo.trim() !== "") {
-      const newTodoObject = { name: newTodo, cost: cost };
-      const updatedTodos = [...todos, newTodoObject];
+      const updatedTodos = [...todos, newTodo];
       setTodos(updatedTodos);
       onChange(updatedTodos);
-      setNewTodo("");
-      setCost(""); // Mengatur ulang nilai cost setelah menambahkan todo
+      setNewTodo(""); // Mengosongkan nilai input setelah ditambahkan
     }
   };
 
   const handleDeleteTodo = (index: number) => {
+    // Menghapus todo berdasarkan index
     const updatedTodos = todos.filter((_, i) => i !== index);
     setTodos(updatedTodos);
     onChange(updatedTodos);
@@ -33,8 +32,8 @@ const NearTour: React.FC<NearTourProps> = ({ value, onChange }) => {
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      event.preventDefault();
-      handleAddTodo();
+      event.preventDefault(); // Mencegah aksi default saat menekan tombol "Enter"
+      handleAddTodo(); // Menambahkan todo saat tombol "Enter" ditekan
     }
   };
 
@@ -47,13 +46,6 @@ const NearTour: React.FC<NearTourProps> = ({ value, onChange }) => {
           type="text"
           value={newTodo}
           onChange={handleInputChange}
-        />
-        <input
-          className="border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:border-rose-500 w-20"
-          placeholder="Cost"
-          type="number"
-          value={cost}
-          onChange={(event) => setCost(event.target.value)}
           onKeyDown={handleKeyDown}
         />
         <button
@@ -70,8 +62,7 @@ const NearTour: React.FC<NearTourProps> = ({ value, onChange }) => {
             key={index}
             className="flex items-center mb-2 justify-between"
           >
-            <span>{todo.name}</span>
-            <span>{todo.cost}</span>
+            <span>{todo}</span>
             <button
               className="ml-2 bg-rose-500 hover:bg-rose-600 text-white font-bold px-2 py-1 rounded-md focus:outline-none"
               onClick={() => handleDeleteTodo(index)}
@@ -85,4 +76,4 @@ const NearTour: React.FC<NearTourProps> = ({ value, onChange }) => {
   );
 };
 
-export default NearTour;
+export default Facility;

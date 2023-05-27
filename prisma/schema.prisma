@@ -21,6 +21,7 @@ model Admin {
   user            User[]
   rating          Rating[]
   notifi          Notification[]
+  hero            Hero[]
 }
 
 model User {
@@ -42,6 +43,13 @@ model User {
   admin             Admin?      @relation(fields: [adminId], references: [id], onDelete: Cascade)
 }
 
+model Hero{
+  id                 String @id @default(auto()) @map("_id") @db.ObjectId
+  name               String
+  adminId            String    @db.ObjectId
+  admin              Admin      @relation(fields: [adminId], references: [id], onDelete: Cascade)
+}
+
 model Account {
   id                 String @id @default(auto()) @map("_id") @db.ObjectId
   userId             String   @db.ObjectId
@@ -59,22 +67,32 @@ model Account {
   @@unique([provider, providerAccountId])
 }
 
+model Additional{
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  cost            String
+  listingId       String @db.ObjectId  
+  listing         Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+}
+
 model Listing {
   id              String @id @default(auto()) @map("_id") @db.ObjectId
   title           String
   description     String
   imageSrc        String[] 
   fasilitas       String[]
+  additional      Additional[]
   createdAt       DateTime @default(now())
-  category        String
+  bed             Int
   roomCount       Int
   guestCount      Int
   price           Int
+  discount        Int?
   reservations    Reservation[]
   notifi          Notification[]
   rating          Rating[]
-  adminId         String?     @db.ObjectId
-  admin           Admin?      @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  adminId         String     @db.ObjectId
+  admin           Admin      @relation(fields: [adminId], references: [id], onDelete: Cascade)
 }
 
 model Reservation {
