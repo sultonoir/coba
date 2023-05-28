@@ -1,6 +1,5 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo } from "react";
 import Modal from "./Modal";
-import useEditnModal from "@/hooks/useEditModal";
 import { SafeListing } from "@/types";
 import { useRouter } from "next/navigation";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
@@ -12,11 +11,12 @@ import ImageUpload from "../inputs/ImageUpload";
 import Facility from "../shared/Facility";
 import NearTour from "../shared/NearTour";
 import TextArea from "../inputs/TextArea";
-import { Additional } from "@prisma/client";
 import Button from "../shared/Button";
 import InputIdr from "../inputs/InputIdr";
+import { Additional } from "@prisma/client";
 
 enum STEPS {
+  CHOISE = 0,
   INFO = 1,
   IMAGES = 2,
   FASILITAS = 3,
@@ -27,15 +27,23 @@ enum STEPS {
 }
 
 type Props = {
-  data: SafeListing;
-  Addtional: Additional[];
+  listings: SafeListing;
+  Additional: Additional[];
+  editListingId: string;
+  editModalVisible: boolean;
+  onClose: () => void;
 };
 
-const EditListingModal = ({ data, Addtional }: Props) => {
+const EditListingModal = ({
+  listings,
+  Additional,
+  editListingId,
+  editModalVisible,
+  onClose,
+}: Props) => {
   const router = useRouter();
-  const [step, setStep] = useState(STEPS.INFO);
+  const [step, setStep] = useState(STEPS.CHOISE);
   const [isLoading, setIsLoading] = useState(false);
-  const edit = useEditnModal();
   const {
     register,
     handleSubmit,
@@ -45,16 +53,17 @@ const EditListingModal = ({ data, Addtional }: Props) => {
     reset,
   } = useForm<FieldValues>({
     defaultValues: {
-      img: data.imageSrc,
-      price: data.price,
-      bed: data.bed,
-      fasilitas: data.fasilitas,
-      title: data.title,
-      description: data.description,
-      roomCount: data.roomCount,
-      guestCount: data.guestCount,
-      additional: Addtional,
-      discount: 0 || data.discount,
+      img: listings.imageSrc,
+      price: listings.price,
+      bed: listings.bed,
+      fasilitas: listings.fasilitas,
+      title: listings.title,
+      description: listings.description,
+      roomCount: listings.roomCount,
+      guestCount: listings.guestCount,
+      additional: Additional,
+      discount: 0,
+      listingId: listings.id,
     },
   });
 
@@ -62,16 +71,27 @@ const EditListingModal = ({ data, Addtional }: Props) => {
     setStep(step);
   };
 
+  const onBack = () => {
+    setStep(STEPS.CHOISE);
+  };
+
+  const secondaryActionLabel = useMemo(() => {
+    if (step === STEPS.CHOISE) {
+      return undefined;
+    }
+    return "back";
+  }, [step]);
+
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
     axios
-      .post("/api/listings", data)
+      .put(`/api/editListings`, data)
       .then(() => {
-        toast.success("Listing Created");
+        toast.success("Listing Edited");
         router.refresh();
         reset();
-        setStep(STEPS.INFO);
-        edit.onClose();
+        onClose();
+        setStep(STEPS.CHOISE);
       })
       .catch((error: any) => {
         toast.error(error.message);
@@ -93,40 +113,93 @@ const EditListingModal = ({ data, Addtional }: Props) => {
   const additional = watch("additional");
 
   let bodyContent = (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-4">
       <Heading
-        title="Detail Ruangan"
-        subtitle="Fasilitas utama apa saja yang anda punya"
+        title="Pilihan"
+        subtitle="pilih mana yang mau di edit"
       />
-      <Input
-        id="guestCount"
-        label="Tamu"
-        disabled={isLoading}
-        register={register}
-        errors={errors}
-        required
-        type="number"
+      <Button
+        onClick={() => onStepClick(STEPS.INFO)}
+        label="Info"
+        outline
+        small
       />
-      <Input
-        id="roomCount"
-        label="Kamar"
-        disabled={isLoading}
-        register={register}
-        errors={errors}
-        required
-        type="number"
+      <Button
+        onClick={() => onStepClick(STEPS.IMAGES)}
+        label="Images"
+        outline
+        small
       />
-      <Input
-        id="bed"
-        label="Tempat tidur"
-        disabled={isLoading}
-        register={register}
-        errors={errors}
-        required
-        type="number"
+      <Button
+        onClick={() => onStepClick(STEPS.FASILITAS)}
+        label="fasilitas"
+        outline
+        small
+      />
+      <Button
+        onClick={() => onStepClick(STEPS.ADDITIONAL)}
+        label="additional"
+        outline
+        small
+      />
+      <Button
+        onClick={() => onStepClick(STEPS.DISCOUNT)}
+        label="Discount"
+        outline
+        small
+      />
+      <Button
+        onClick={() => onStepClick(STEPS.DESCRIPTION)}
+        label="Description"
+        outline
+        small
+      />
+      <Button
+        onClick={() => onStepClick(STEPS.PRICE)}
+        label="Price"
+        outline
+        small
       />
     </div>
   );
+
+  if (step === STEPS.INFO) {
+    bodyContent = (
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="Detail Ruangan"
+          subtitle="Fasilitas utama apa saja yang anda punya"
+        />
+        <Input
+          id="guestCount"
+          label="Tamu"
+          disabled={isLoading}
+          register={register}
+          errors={errors}
+          required
+          type="number"
+        />
+        <Input
+          id="roomCount"
+          label="Kamar"
+          disabled={isLoading}
+          register={register}
+          errors={errors}
+          required
+          type="number"
+        />
+        <Input
+          id="bed"
+          label="Tempat tidur"
+          disabled={isLoading}
+          register={register}
+          errors={errors}
+          required
+          type="number"
+        />
+      </div>
+    );
+  }
 
   if (step === STEPS.IMAGES) {
     bodyContent = (
@@ -162,8 +235,8 @@ const EditListingModal = ({ data, Addtional }: Props) => {
     bodyContent = (
       <div className="flex flex-col gap-8">
         <Heading
-          title="Sekarang, tetapkan harga layanan tambahan"
-          subtitle="Apa saja layanan tambahan anda"
+          title="Layanan tambahan"
+          subtitle="Layanan tambahan apa yang anda punya"
         />
         <NearTour
           value={additional}
@@ -177,16 +250,13 @@ const EditListingModal = ({ data, Addtional }: Props) => {
     bodyContent = (
       <div className="flex flex-col gap-8">
         <Heading
-          title="Sekarang, tetapkan harga Anda"
-          subtitle="Berapa biaya yang Anda kenakan per malam?"
+          title="discount"
+          subtitle="berapa banyak discount"
         />
         <InputIdr
           id="discount"
-          disabled={isLoading}
           register={register}
           errors={errors}
-          required
-          type="number"
         />
       </div>
     );
@@ -239,63 +309,17 @@ const EditListingModal = ({ data, Addtional }: Props) => {
     );
   }
 
-  let footer = (
-    <div className="grid grid-cols-2 gap-2">
-      <Button
-        onClick={() => onStepClick(STEPS.INFO)}
-        label="Info"
-        outline
-        small
-      />
-      <Button
-        onClick={() => onStepClick(STEPS.IMAGES)}
-        label="Images"
-        outline
-        small
-      />
-      <Button
-        onClick={() => onStepClick(STEPS.FASILITAS)}
-        label="fasilitas"
-        outline
-        small
-      />
-      <Button
-        onClick={() => onStepClick(STEPS.ADDITIONAL)}
-        label="additional"
-        outline
-        small
-      />
-      <Button
-        onClick={() => onStepClick(STEPS.DISCOUNT)}
-        label="Discount"
-        outline
-        small
-      />
-      <Button
-        onClick={() => onStepClick(STEPS.DESCRIPTION)}
-        label="Description"
-        outline
-        small
-      />
-      <Button
-        onClick={() => onStepClick(STEPS.PRICE)}
-        label="Price"
-        outline
-        small
-      />
-    </div>
-  );
-
   return (
     <Modal
       body={bodyContent}
       onSubmit={handleSubmit(onSubmit)}
-      isOpen={edit.isOpen}
-      onClose={edit.onClose}
+      isOpen={editModalVisible}
+      onClose={onClose}
       actionLabel="Submit"
       title="Properti"
       disabled={isLoading}
-      footer={footer}
+      secondaryActionLabel={secondaryActionLabel}
+      secondaryAction={step === STEPS.CHOISE ? undefined : onBack}
     />
   );
 };

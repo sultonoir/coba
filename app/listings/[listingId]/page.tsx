@@ -16,10 +16,6 @@ export async function generateMetadata({ params }: { params: Iparams }) {
   };
 }
 
-export interface latlngProp {
-  latlng: number[];
-}
-
 const page = async ({ params }: { params: Iparams }) => {
   const listing = await getLIstingById(params);
   const currentUser = await getCurrentUser();

@@ -149,7 +149,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
   }, [dateRange, listing.price, listing.discount, rooms]);
 
   const body = (
-    <>
+    <div className="p-4">
       <Counter
         title="Rooms"
         subtitle="How many rooms reservation "
@@ -160,7 +160,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
       {additional.map((item, index) => (
         <div
           key={item.name}
-          className="flex flex-col gap-2 px-4 py-2"
+          className="flex flex-col gap-2 py-2"
         >
           <div className="flex flex-row gap-2">
             <input
@@ -179,7 +179,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
           </div>
         </div>
       ))}
-    </>
+    </div>
   );
 
   return (

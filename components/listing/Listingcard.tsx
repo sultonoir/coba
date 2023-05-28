@@ -19,7 +19,6 @@ import ButtonConfirm from "../shared/ButtonConfrim";
 import { Playfair_Display } from "next/font/google";
 import { IoBedOutline } from "react-icons/io5";
 import EditListingModal from "../modal/EditListingModal";
-import useEditnModal from "@/hooks/useEditModal";
 export const play = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-play",
@@ -191,13 +190,25 @@ const ListingCard: React.FC<ListingCardProps> = ({
       return "Berikan penilaian";
     }
   }, [reservation?.status]);
-  const editModal = useEditnModal();
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editListingId, setEditListingId] = useState("");
+  const openEditModal = (listingId: string) => {
+    setEditListingId(listingId);
+    setEditModalVisible(true);
+  };
+
+  const handleEditClick = () => {
+    openEditModal(data.id);
+  };
   return (
     <div className="sm:col-span-4 xl:col-span-2 group relative shadow-sm border rounded-xl">
       <RatingsModal listingId={data.id} />
       <EditListingModal
-        data={data}
-        Addtional={data.additional}
+        listings={data}
+        Additional={data.additional}
+        editModalVisible={editModalVisible}
+        editListingId={editListingId}
+        onClose={() => setEditModalVisible(false)}
       />
       <div className="flex flex-col gap-3 w-full">
         <div
@@ -301,7 +312,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
         <div className="flex gap-2">
           {edit && (
             <Button
-              onClick={editModal.onOpen}
+              onClick={handleEditClick}
               label="Edit"
               small
               outline

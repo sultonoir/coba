@@ -1,11 +1,19 @@
+import axios from "axios";
 import React, { useState } from "react";
 
 interface NearTourProps {
   value: any[];
   onChange: (value: string[]) => void;
+  delete?: boolean;
+  id?: string;
 }
 
-const NearTour: React.FC<NearTourProps> = ({ value, onChange }) => {
+const NearTour: React.FC<NearTourProps> = ({
+  value,
+  onChange,
+  delete: shouldDelete,
+  id,
+}) => {
   const [todos, setTodos] = useState(value);
   const [cost, setCost] = useState("");
   const [newTodo, setNewTodo] = useState("");
@@ -29,6 +37,17 @@ const NearTour: React.FC<NearTourProps> = ({ value, onChange }) => {
     const updatedTodos = todos.filter((_, i) => i !== index);
     setTodos(updatedTodos);
     onChange(updatedTodos);
+
+    if (shouldDelete && id) {
+      axios
+        .delete(`/api/additional/${id}`)
+        .then((response) => {
+          console.log("Item dihapus dari endpoint", response.data);
+        })
+        .catch((error) => {
+          console.error("Gagal menghapus item dari endpoint", error);
+        });
+    }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -86,3 +105,4 @@ const NearTour: React.FC<NearTourProps> = ({ value, onChange }) => {
 };
 
 export default NearTour;
+``;
