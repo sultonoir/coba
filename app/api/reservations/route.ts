@@ -14,25 +14,18 @@ export async function POST(request: Request) {
     userId,
     guestName,
     guestImage,
+    adminId,
+    rooms,
   } = body;
-
-  if (
-    !listingId ||
-    !startDate ||
-    !endDate ||
-    !totalPrice ||
-    !status ||
-    !userId ||
-    !guestName
-  ) {
-    return NextResponse.error();
-  }
 
   const listingAndReservation = await prisma.listing.update({
     where: {
       id: listingId,
     },
     data: {
+      roomCount: {
+        decrement: rooms,
+      },
       reservations: {
         create: {
           userId,
@@ -42,6 +35,7 @@ export async function POST(request: Request) {
           status,
           guestName,
           guestImage,
+          adminId,
         },
       },
     },

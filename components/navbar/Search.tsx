@@ -2,9 +2,8 @@
 import useSearchModal from "@/hooks/useSearchModal";
 import { differenceInDays } from "date-fns";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { BiSearch } from "react-icons/bi";
-import { getRegencyByName } from "territory-indonesia";
 
 const Search = () => {
   const searchModal = useSearchModal();
@@ -16,19 +15,6 @@ const Search = () => {
   const endDate = params?.get("endDate");
   const guestCount = params?.get("guestCount");
 
-  const [coordinate, setCoordinate] = useState<any>("Anywhere");
-  const locationValue = params?.get("locationValue");
-
-  useEffect(() => {
-    const fetch = async () => {
-      if (typeof locationValue === "string") {
-        const cities = await getRegencyByName(locationValue);
-        setCoordinate(cities.name);
-      }
-    };
-    fetch();
-  }, [locationValue]);
-
   const durationLabel = useMemo(() => {
     if (startDate && endDate) {
       const start = new Date(startDate as string);
@@ -38,28 +24,25 @@ const Search = () => {
       if (dif === 0) {
         dif = 1;
       }
-      return `${dif} hari`;
+      return `${dif} Day`;
     }
-    return "Minggu manapun";
+    return "Booking Date";
   }, [startDate, endDate]);
 
   const gusetLabel = useMemo(() => {
     if (guestCount) {
-      return `${guestCount} tamu`;
+      return `${guestCount} Guest`;
     }
-    return "Tambahkan tamu";
+    return "Add Guest";
   }, [guestCount]);
 
   return (
-    <>
+    <div className="max-w-xs mx-auto">
       <div
         onClick={searchModal.onOpen}
-        className="border-[1px] w-full md:w-auto py-2 rounded-full shadow-sm hover:shadow-md transition cursor-pointer hidden md:block"
+        className="border-[1px]  py-2 rounded-full shadow-sm hover:shadow-md transition cursor-pointer hidden md:block"
       >
         <div className="flex flex-row items-center justify-between">
-          <div className="text-sm font-semibold pl-5 md:px-6">
-            {coordinate || "Ke mana ?"}
-          </div>
           <div className="hidden lg:block text-sm font-semibold px-6 border-x-[1px] flex-1 text-center">
             {durationLabel}
           </div>
@@ -74,7 +57,7 @@ const Search = () => {
       <div className="border border-neutral-200 hover:shadow-md transition cursor-pointer rounded-full md:hidden p-3">
         <BiSearch size={18} />
       </div>
-    </>
+    </div>
   );
 };
 

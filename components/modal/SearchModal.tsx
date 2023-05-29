@@ -1,7 +1,6 @@
 "use client";
 
 import qs from "query-string";
-import dynamic from "next/dynamic";
 import { useCallback, useMemo, useState } from "react";
 import { Range } from "react-date-range";
 import { formatISO } from "date-fns";
@@ -13,10 +12,8 @@ import Modal from "./Modal";
 import Counter from "../inputs/Counter";
 import Heading from "../shared/Heading";
 import Calendar from "../inputs/Calendar";
-import CountrySelect, { safeDist } from "../inputs/CountrySelect";
 
 enum STEPS {
-  LOCATION = 0,
   DATE = 1,
   INFO = 2,
 }
@@ -29,27 +26,14 @@ const SearchModal = ({ districts }: SearchModalProps) => {
   const searchModal = useSearchModal();
   const params = useSearchParams();
 
-  const [step, setStep] = useState(STEPS.LOCATION);
-
-  const [location, setLocation] = useState<safeDist>();
-  const [kids, setKids] = useState(0);
-  const [adult, setAdult] = useState(0);
-  const [baby, setBaby] = useState(0);
+  const [step, setStep] = useState(STEPS.DATE);
+  const [guestCount, setGuestCount] = useState(1);
   const [roomCount, setRoomCount] = useState(1);
-  const [bathroomCount, setBathroomCount] = useState(1);
   const [dateRange, setDateRange] = useState<Range>({
     startDate: new Date(),
     endDate: new Date(),
     key: "selection",
   });
-
-  const Map = useMemo(
-    () =>
-      dynamic(() => import("../shared/Map"), {
-        ssr: false,
-      }),
-    [location]
-  );
 
   const onBack = useCallback(() => {
     setStep((value) => value - 1);
@@ -72,10 +56,8 @@ const SearchModal = ({ districts }: SearchModalProps) => {
 
     const updatedQuery: any = {
       ...currentQuery,
-      locationValue: location?.value,
-      guestCount: adult + kids + baby,
+      guestCount,
       roomCount,
-      bathroomCount,
     };
 
     if (dateRange.startDate) {
@@ -88,13 +70,13 @@ const SearchModal = ({ districts }: SearchModalProps) => {
 
     const url = qs.stringifyUrl(
       {
-        url: "/",
+        url: `rooms/`,
         query: updatedQuery,
       },
       { skipNull: true }
     );
 
-    setStep(STEPS.LOCATION);
+    setStep(STEPS.DATE);
     searchModal.onClose();
     router.push(url);
   }, [
@@ -102,13 +84,9 @@ const SearchModal = ({ districts }: SearchModalProps) => {
     searchModal,
     location,
     router,
-    adult,
-    kids,
-    baby,
     roomCount,
     dateRange,
     onNext,
-    bathroomCount,
     params,
   ]);
 
@@ -121,7 +99,7 @@ const SearchModal = ({ districts }: SearchModalProps) => {
   }, [step]);
 
   const secondaryActionLabel = useMemo(() => {
-    if (step === STEPS.LOCATION) {
+    if (step === STEPS.DATE) {
       return undefined;
     }
 
@@ -131,75 +109,37 @@ const SearchModal = ({ districts }: SearchModalProps) => {
   let bodyContent = (
     <div className="flex flex-col gap-8">
       <Heading
-        title="Kemana kamu mau pergi?"
-        subtitle="Temukan lokasi yang sempurna!"
+        title="Where do you wanna go?"
+        subtitle="Find the perfect day!"
       />
-      <CountrySelect
-        districts={districts}
-        value={location}
-        onChange={(value) => setLocation(value as safeDist)}
+      <Calendar
+        onChange={(value) => setDateRange(value.selection)}
+        value={dateRange}
       />
-      <hr />
-      <Map center={location?.latlng} />
     </div>
   );
-
-  if (step === STEPS.DATE) {
-    bodyContent = (
-      <div className="flex flex-col gap-8">
-        <Heading
-          title="Kapan Anda berencana untuk pergi?"
-          subtitle="Tentukan waktu untuk pergi"
-        />
-        <Calendar
-          onChange={(value) => setDateRange(value.selection)}
-          value={dateRange}
-        />
-      </div>
-    );
-  }
 
   if (step === STEPS.INFO) {
     bodyContent = (
       <div className="flex flex-col gap-8">
         <Heading
-          title="Informasi lebih lanjut"
-          subtitle="Temukan tempat sempurna Anda!"
+          title="More information"
+          subtitle="Find your perfect place!"
         />
         <Counter
-          onChange={(value) => setAdult(value)}
-          value={adult}
-          title="Orang dewasa"
-          subtitle="Umur 12 tahun keatas"
-        />
-        <Counter
-          onChange={(value) => setKids(value)}
-          value={kids}
-          title="Anak-anak"
-          subtitle="Umur 2-12 tahun"
-        />
-        <Counter
-          onChange={(value) => setBaby(value)}
-          value={baby}
-          title="Balita"
-          subtitle="Dibawah 2 tahun"
+          onChange={(value) => setGuestCount(value)}
+          value={guestCount}
+          title="Guests"
+          subtitle="How many guests are coming?"
         />
         <hr />
         <Counter
           onChange={(value) => setRoomCount(value)}
           value={roomCount}
-          title="Kamar"
-          subtitle="Berapa banyak kamar yang Anda butuhkan?"
+          title="Rooms"
+          subtitle="How many rooms do you need?"
         />
         <hr />
-        <Counter
-          onChange={(value) => {
-            setBathroomCount(value);
-          }}
-          value={bathroomCount}
-          title="Kamar mandi"
-          subtitle="Berapa banyak kamar mandi yang Anda butuhkan?"
-        />
       </div>
     );
   }
@@ -211,7 +151,7 @@ const SearchModal = ({ districts }: SearchModalProps) => {
       actionLabel={actionLabel}
       onSubmit={onSubmit}
       secondaryActionLabel={secondaryActionLabel}
-      secondaryAction={step === STEPS.LOCATION ? undefined : onBack}
+      secondaryAction={step === STEPS.DATE ? undefined : onBack}
       onClose={searchModal.onClose}
       body={bodyContent}
     />

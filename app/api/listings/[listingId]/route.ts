@@ -1,4 +1,4 @@
-import getAdmin from "@/components/actions/getCurrentAdmin";
+import getAdmin from "@/components/actions/getAdmin";
 import prisma from "@/libs/prisma";
 import { NextResponse } from "next/server";
 

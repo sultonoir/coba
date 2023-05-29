@@ -66,11 +66,11 @@ export const adminNav = [
 export const NavItem = [
   {
     title: "Home",
-    href: "/Home",
+    href: "/",
   },
   {
-    title: "Admin",
-    href: "/admin",
+    title: "Rooms",
+    href: "/rooms",
   },
   {
     title: "Reservations",

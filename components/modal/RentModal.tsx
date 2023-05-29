@@ -13,6 +13,7 @@ import Input from "../inputs/Input";
 import TextArea from "../inputs/TextArea";
 import NearTour from "../shared/NearTour";
 import Facility from "../shared/Facility";
+import InputPercentage from "../inputs/InputIdr";
 
 enum STEPS {
   INFO = 1,
@@ -20,7 +21,8 @@ enum STEPS {
   FASILITAS = 3,
   ADDITIONAL = 4,
   DESCRIPTION = 5,
-  PRICE = 6,
+  DISCOUNT = 6,
+  PRICE = 7,
 }
 
 const RentModal = () => {
@@ -46,6 +48,7 @@ const RentModal = () => {
       roomCount: 1,
       guestCount: 0,
       additional: [],
+      discount: 0,
     },
   });
 
@@ -207,6 +210,22 @@ const RentModal = () => {
           register={register}
           errors={errors}
           label="description"
+        />
+      </div>
+    );
+  }
+
+  if (step === STEPS.DISCOUNT) {
+    bodyContent = (
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="discount"
+          subtitle="berapa banyak discount"
+        />
+        <InputPercentage
+          id="discount"
+          register={register}
+          errors={errors}
         />
       </div>
     );

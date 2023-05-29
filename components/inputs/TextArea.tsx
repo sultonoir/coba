@@ -20,7 +20,7 @@ const TextArea: React.FC<TextAreaProps> = ({
 }) => {
   return (
     <textarea
-      maxLength={500}
+      maxLength={1000}
       id={id}
       placeholder={label}
       disabled={disabled}

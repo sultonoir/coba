@@ -190,6 +190,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
       return "Berikan penilaian";
     }
   }, [reservation?.status]);
+
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editListingId, setEditListingId] = useState("");
   const openEditModal = (listingId: string) => {
@@ -201,11 +202,10 @@ const ListingCard: React.FC<ListingCardProps> = ({
     openEditModal(data.id);
   };
   return (
-    <div className="sm:col-span-4 xl:col-span-2 group relative shadow-sm border rounded-xl">
+    <div className="sm:col-span-4 xl:col-span-2 group relative shadow-sm border rounded-xl overflow-hidden">
       <RatingsModal listingId={data.id} />
       <EditListingModal
         listings={data}
-        Additional={data.additional}
         editModalVisible={editModalVisible}
         editListingId={editListingId}
         onClose={() => setEditModalVisible(false)}
@@ -217,7 +217,6 @@ const ListingCard: React.FC<ListingCardProps> = ({
             w-full 
             relative 
             overflow-hidden 
-            rounded-xl
           "
         >
           <Swiper

@@ -32,16 +32,17 @@ const ProfileUpload: React.FC<ProfileUploadProps> = ({ value, onChange }) => {
     >
       {({ open }) => {
         return (
-          <div
-            onClick={() => open?.()}
-            className="
+          <div className="flex flex-col gap-5">
+            <div
+              onClick={() => open?.()}
+              className="
               relative
               cursor-pointer
               hover:opacity-70
               transition
               border-dashed 
               border-2 
-              p-20 
+              p-4
               border-neutral-300
               flex
               flex-col
@@ -50,14 +51,12 @@ const ProfileUpload: React.FC<ProfileUploadProps> = ({ value, onChange }) => {
               gap-4
               text-neutral-600
             "
-          >
-            <TbPhotoPlus size={50} />
-            <div className="font-semibold text-lg">Click to upload</div>
+            >
+              <TbPhotoPlus size={50} />
+              <div className="font-semibold text-lg">Click to upload</div>
+            </div>
             {value && (
-              <div
-                className="
-              absolute inset-0 w-full h-full"
-              >
+              <div className="relative w-full h-60">
                 <Image
                   fill
                   style={{ objectFit: "cover" }}

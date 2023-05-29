@@ -7,7 +7,8 @@ import RegisterModal from "@/components/modal/RegisterModal";
 import LoginModal from "@/components/modal/LoginModal";
 import RentModal from "@/components/modal/RentModal";
 import ToasterProvider from "@/providers/ToasterProvider";
-import getAdmin from "@/components/actions/getCurrentAdmin";
+import getAdmin from "@/components/actions/getAdmin";
+import SearchModal from "@/components/modal/SearchModal";
 
 const inter = Plus_Jakarta_Sans({ subsets: ["latin"] });
 
@@ -32,6 +33,7 @@ export default async function RootLayout({
         href="/logo.svg"
       />
       <body className={inter.className}>
+        <SearchModal />
         <RegisterModal />
         <LoginModal />
         <RentModal />

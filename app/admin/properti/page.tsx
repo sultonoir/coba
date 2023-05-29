@@ -2,7 +2,7 @@ import Container from "@/components/shared/Container";
 import React from "react";
 import PropertiClient from "./PropertiClient";
 import RentInput from "@/components/inputs/RentInput";
-import getAdmin from "@/components/actions/getCurrentAdmin";
+import getAdmin from "@/components/actions/getAdmin";
 import getListings from "@/components/actions/getListings";
 
 const page = async () => {

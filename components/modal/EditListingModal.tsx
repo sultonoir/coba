@@ -13,7 +13,7 @@ import NearTour from "../shared/NearTour";
 import TextArea from "../inputs/TextArea";
 import Button from "../shared/Button";
 import InputIdr from "../inputs/InputIdr";
-import { Additional } from "@prisma/client";
+import ProfileUpload from "../inputs/ProfileUpload";
 
 enum STEPS {
   CHOISE = 0,
@@ -23,12 +23,12 @@ enum STEPS {
   ADDITIONAL = 4,
   DISCOUNT = 5,
   DESCRIPTION = 6,
-  PRICE = 7,
+  IMAGEPROPMO = 7,
+  PRICE = 8,
 }
 
 type Props = {
   listings: SafeListing;
-  Additional: Additional[];
   editListingId: string;
   editModalVisible: boolean;
   onClose: () => void;
@@ -36,7 +36,6 @@ type Props = {
 
 const EditListingModal = ({
   listings,
-  Additional,
   editListingId,
   editModalVisible,
   onClose,
@@ -61,9 +60,10 @@ const EditListingModal = ({
       description: listings.description,
       roomCount: listings.roomCount,
       guestCount: listings.guestCount,
-      additional: Additional,
-      discount: 0,
+      additional: listings.additional,
+      discount: listings.discount,
       listingId: listings.id,
+      imagepromo: listings.imagePromo,
     },
   });
 
@@ -85,7 +85,7 @@ const EditListingModal = ({
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
     axios
-      .put(`/api/editListings`, data)
+      .put(`/api/listings`, data)
       .then(() => {
         toast.success("Listing Edited");
         router.refresh();
@@ -111,6 +111,7 @@ const EditListingModal = ({
   const img = watch("img");
   const fasilitas = watch("fasilitas");
   const additional = watch("additional");
+  const imagePromo = watch("imagePromo");
 
   let bodyContent = (
     <div className="flex flex-col gap-4">
@@ -132,13 +133,13 @@ const EditListingModal = ({
       />
       <Button
         onClick={() => onStepClick(STEPS.FASILITAS)}
-        label="fasilitas"
+        label="Fasilitas"
         outline
         small
       />
       <Button
         onClick={() => onStepClick(STEPS.ADDITIONAL)}
-        label="additional"
+        label="Additional Service"
         outline
         small
       />
@@ -151,6 +152,12 @@ const EditListingModal = ({
       <Button
         onClick={() => onStepClick(STEPS.DESCRIPTION)}
         label="Description"
+        outline
+        small
+      />
+      <Button
+        onClick={() => onStepClick(STEPS.IMAGEPROPMO)}
+        label="Image Promosi"
         outline
         small
       />
@@ -283,6 +290,21 @@ const EditListingModal = ({
           register={register}
           errors={errors}
           label="description"
+        />
+      </div>
+    );
+  }
+
+  if (step === STEPS.IMAGEPROPMO) {
+    bodyContent = (
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="Promosi banner"
+          subtitle="Jika anda memliki banner promosi"
+        />
+        <ProfileUpload
+          value={imagePromo}
+          onChange={(value) => setCustomValue("imagePromo", value)}
         />
       </div>
     );

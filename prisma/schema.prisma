@@ -21,7 +21,7 @@ model Admin {
   user            User[]
   rating          Rating[]
   notifi          Notification[]
-  hero            Hero[]
+  hero            String[]
 }
 
 model User {
@@ -43,12 +43,6 @@ model User {
   admin             Admin?      @relation(fields: [adminId], references: [id], onDelete: Cascade)
 }
 
-model Hero{
-  id                 String @id @default(auto()) @map("_id") @db.ObjectId
-  name               String
-  adminId            String    @db.ObjectId
-  admin              Admin      @relation(fields: [adminId], references: [id], onDelete: Cascade)
-}
 
 model Account {
   id                 String @id @default(auto()) @map("_id") @db.ObjectId
@@ -88,6 +82,7 @@ model Listing {
   guestCount      Int
   price           Int
   discount        Int?
+  imagePromo      String?
   reservations    Reservation[]
   notifi          Notification[]
   rating          Rating[]
@@ -97,7 +92,7 @@ model Listing {
 
 model Reservation {
   id              String             @id @default(auto()) @map("_id") @db.ObjectId
-  userId          String   @db.ObjectId
+  userId          String?   @db.ObjectId
   listingId       String @db.ObjectId  
   startDate       DateTime
   endDate         DateTime
@@ -107,7 +102,7 @@ model Reservation {
   guestImage      String?
   createdAt       DateTime @default(now())
   notifi          Notification[]
-  user            User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user            User? @relation(fields: [userId], references: [id], onDelete: Cascade)
   listing         Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
   adminId         String?     @db.ObjectId
   admin           Admin?      @relation(fields: [adminId], references: [id], onDelete: Cascade)

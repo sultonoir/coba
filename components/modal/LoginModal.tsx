@@ -53,8 +53,8 @@ const LoginModal = () => {
   const bodyContent = (
     <div className="flex flex-col gap-4">
       <Heading
-        title="Selamat datang di kyouka"
-        subtitle="Masuk menggunakan akun"
+        title="welcome to Kyouka"
+        subtitle="Login to your account"
       />
       <Input
         id="email"

@@ -53,7 +53,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onChange, value }) => {
               transition
               border-dashed 
               border-2 
-              p-20 
+              p-4
               border-neutral-300
               flex
               flex-col
@@ -66,7 +66,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onChange, value }) => {
               <TbPhotoPlus size={50} />
               <div className="font-semibold text-lg">Klik untuk mengunggah</div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[50vh] overflow-y-auto">
+            <div className="grid grid-cols-1 max-h-[50vh] overflow-y-auto gap-4">
               {value.map((url) => (
                 <div
                   key={url}

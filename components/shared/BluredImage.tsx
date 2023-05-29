@@ -5,13 +5,18 @@ import { useState } from "react";
 interface BluredImageProps {
   src: string;
   alt: string;
+  border?: boolean;
 }
 
-export default function BluredImage({ src, alt }: BluredImageProps) {
+export default function BluredImage({ src, alt, border }: BluredImageProps) {
   const [isLoading, setLoading] = useState(true);
 
   return (
-    <div className="relative aspect-w-1 aspect-h-1 w-full h-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8">
+    <div
+      className={`${
+        border ? "rounded-lg" : ""
+      } relative aspect-w-1 aspect-h-1 w-full h-full overflow-hidden bg-gray-200 xl:aspect-w-7 xl:aspect-h-8`}
+    >
       <Image
         alt={alt}
         src={src}
@@ -19,8 +24,7 @@ export default function BluredImage({ src, alt }: BluredImageProps) {
         priority
         sizes="100%"
         style={{ objectFit: "cover" }}
-        className={`
-              duration-700 ease-in-out group-hover:scale-110
+        className={`duration-700 ease-in-out group-hover:scale-110
               ${
                 isLoading
                   ? "scale-110 blur-2xl grayscale"

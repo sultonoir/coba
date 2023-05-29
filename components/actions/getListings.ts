@@ -13,25 +13,12 @@ export interface IListingsParams {
 
 export default async function getListings(params: IListingsParams) {
   try {
-    const {
-      adminId,
-      roomCount,
-      guestCount,
-      bathroomCount,
-      locationValue,
-      startDate,
-      endDate,
-      category,
-    } = params;
+    const { adminId, roomCount, guestCount, startDate, endDate } = params;
 
     let query: any = {};
 
     if (adminId) {
       query.adminId = adminId;
-    }
-
-    if (category) {
-      query.category = category;
     }
 
     if (roomCount) {
@@ -43,35 +30,6 @@ export default async function getListings(params: IListingsParams) {
     if (guestCount) {
       query.guestCount = {
         gte: +guestCount,
-      };
-    }
-
-    if (bathroomCount) {
-      query.bathroomCount = {
-        gte: +bathroomCount,
-      };
-    }
-
-    if (locationValue) {
-      query.locationValue = locationValue;
-    }
-
-    if (startDate && endDate) {
-      query.NOT = {
-        reservations: {
-          some: {
-            OR: [
-              {
-                endDate: { gte: startDate },
-                startDate: { lte: startDate },
-              },
-              {
-                startDate: { lte: endDate },
-                endDate: { gte: endDate },
-              },
-            ],
-          },
-        },
       };
     }
 

@@ -2,14 +2,8 @@
 import { Range } from "react-date-range";
 import Calender from "../inputs/Calendar";
 import Button from "../shared/Button";
-import { Additional } from "@prisma/client";
-import { useEffect, useState } from "react";
 
-interface AdditionalItem {
-  name: string;
-  cost: number;
-}
-interface ListingReservationProps {
+interface AdminReservationProps {
   price: number;
   dateRange: Range;
   totalPrice: number;
@@ -18,7 +12,7 @@ interface ListingReservationProps {
   disabled: boolean;
   body: React.ReactElement;
 }
-const ListingReservation: React.FC<ListingReservationProps> = ({
+const AdminReservation: React.FC<AdminReservationProps> = ({
   price,
   dateRange,
   totalPrice,
@@ -62,4 +56,4 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
   );
 };
 
-export default ListingReservation;
+export default AdminReservation;
