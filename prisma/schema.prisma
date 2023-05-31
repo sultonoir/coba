@@ -21,7 +21,15 @@ model Admin {
   user            User[]
   rating          Rating[]
   notifi          Notification[]
-  hero            String[]
+  hero            Hero[]
+}
+
+model Hero{
+  id                String @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  img               String
+  adminId           String @db.ObjectId
+  admin             Admin      @relation(fields: [adminId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -61,21 +69,12 @@ model Account {
   @@unique([provider, providerAccountId])
 }
 
-model Additional{
-  id              String @id @default(auto()) @map("_id") @db.ObjectId
-  name            String 
-  cost            String
-  listingId       String @db.ObjectId
-  listing         Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
-}
-
 model Listing {
   id              String @id @default(auto()) @map("_id") @db.ObjectId
   title           String
   description     String
   imageSrc        String[] 
   fasilitas       String[]
-  additional      Additional[]
   createdAt       DateTime @default(now())
   bed             Int
   roomCount       Int
@@ -97,6 +96,7 @@ model Reservation {
   startDate       DateTime
   endDate         DateTime
   totalPrice      Int
+  rooms           Int
   status          String?
   guestName       String?
   guestImage      String?

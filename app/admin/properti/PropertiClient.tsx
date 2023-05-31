@@ -1,7 +1,6 @@
 "use client";
 import ListingCard from "@/components/listing/Listingcard";
 import { SafeListing } from "@/types";
-import { Additional } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useState } from "react";
@@ -32,7 +31,7 @@ const PropertiClient: React.FC<PropertiClientProps> = ({ listings }) => {
     [router]
   );
   return (
-    <div className="grid  grid-cols-1 sm:grid-cols-8  gap-5  mt-6">
+    <div className="grid grid-cols-1 sm:grid-cols-8 gap-5 mt-6">
       {listings.map((listing) => (
         <ListingCard
           data={listing}

@@ -19,10 +19,9 @@ enum STEPS {
   INFO = 1,
   IMAGES = 2,
   FASILITAS = 3,
-  ADDITIONAL = 4,
-  DESCRIPTION = 5,
-  DISCOUNT = 6,
-  PRICE = 7,
+  DESCRIPTION = 4,
+  DISCOUNT = 5,
+  PRICE = 6,
 }
 
 const RentModal = () => {
@@ -47,7 +46,6 @@ const RentModal = () => {
       description: "",
       roomCount: 1,
       guestCount: 0,
-      additional: [],
       discount: 0,
     },
   });
@@ -169,21 +167,6 @@ const RentModal = () => {
         <Facility
           value={fasilitas}
           onChange={(value) => setCustomValue("fasilitas", value)}
-        />
-      </div>
-    );
-  }
-
-  if (step === STEPS.ADDITIONAL) {
-    bodyContent = (
-      <div className="flex flex-col gap-8">
-        <Heading
-          title="Sekarang, tetapkan harga layanan tambahan"
-          subtitle="Apa saja layanan tambahan anda"
-        />
-        <NearTour
-          value={additional}
-          onChange={(value) => setCustomValue("additional", value)}
         />
       </div>
     );

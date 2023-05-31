@@ -9,14 +9,13 @@ import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { play } from "../listing/Listingcard";
 import Link from "next/link";
 import Search from "../navbar/Search";
-
 interface HomeHeroProps {
   listings: SafeListing[];
 }
 
 const HomeHero: React.FC<HomeHeroProps> = ({ listings }) => {
   return (
-    <div className="aspect-video relative">
+    <div className="sm:aspect-video relative">
       <Swiper
         spaceBetween={30}
         navigation={{
@@ -26,6 +25,10 @@ const HomeHero: React.FC<HomeHeroProps> = ({ listings }) => {
         centeredSlides={true}
         pagination={{
           clickable: true,
+        }}
+        autoplay={{
+          delay: 2500,
+          disableOnInteraction: false,
         }}
         modules={[Autoplay, Pagination, Navigation]}
         className="mySwiper"

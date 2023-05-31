@@ -12,7 +12,6 @@ import Container from "@/components/shared/Container";
 import ListingHead from "@/components/listing/ListingHead";
 import ListingInfo from "@/components/listing/ListingInfo";
 import ListingReservation from "@/components/listing/ListingReservation";
-import { Additional } from "@prisma/client";
 import Counter from "@/components/inputs/Counter";
 import AdminReservation from "@/components/listing/AdminReservations";
 
@@ -24,9 +23,7 @@ const initialDateRange = {
 
 interface ListingClientProps {
   reservations?: SafeReservation[];
-  listing: SafeListing & {
-    additional: Additional[];
-  };
+  listing: SafeListing;
   currentUser?: SafeUser | null;
   admin?: SafeAdmin | null;
 }
@@ -45,38 +42,12 @@ const ListingClient: React.FC<ListingClientProps> = ({
     ...listing,
     imageSrc: listing.imageSrc.map((src) => ({ name: src })),
     fasilitas: listing.fasilitas.map((src) => ({ item: src })),
-    additional: listing.additional.map((src) => ({
-      name: src.name,
-      cost: parseInt(src.cost, 10),
-    })),
   };
 
   const [isLoading, setIsLoading] = useState(false);
   const [totalPrice, setTotalPrice] = useState(listing.price);
   const [dateRange, setDateRange] = useState<Range>(initialDateRange);
-  const [total, setTotal] = useState(totalPrice);
   const [rooms, setRooms] = useState(1);
-  const additional = newData.additional;
-  const [checkedItems, setCheckedItems] = useState<boolean[]>(
-    Array(additional.length).fill(false)
-  );
-
-  useEffect(() => {
-    let newTotalPrice = totalPrice;
-
-    for (let i = 0; i < checkedItems.length; i++) {
-      if (checkedItems[i]) {
-        newTotalPrice += additional[i].cost;
-      }
-    }
-
-    setTotal(newTotalPrice);
-  }, [checkedItems, additional, totalPrice]);
-
-  const formatter = new Intl.NumberFormat("us-US", {
-    style: "currency",
-    currency: "USD",
-  });
 
   const onCreateReservation = useCallback(() => {
     if (!currentUser) {
@@ -87,7 +58,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
     axios
       .post("/api/reservations", {
         userId: currentUser.id,
-        totalPrice: total,
+        totalPrice: totalPrice,
         startDate: dateRange.startDate,
         endDate: dateRange.endDate,
         listingId: listing?.id,
@@ -109,7 +80,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
         setIsLoading(false);
       });
   }, [
-    total,
+    totalPrice,
     dateRange,
     listing?.id,
     router,
@@ -145,7 +116,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
 
     axios
       .post("/api/reservations", {
-        totalPrice: total,
+        totalPrice: totalPrice,
         startDate: dateRange.startDate,
         endDate: dateRange.endDate,
         listingId: listing?.id,
@@ -167,7 +138,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
         setIsLoading(false);
       });
   }, [
-    total,
+    totalPrice,
     dateRange,
     listing?.id,
     router,
@@ -185,28 +156,6 @@ const ListingClient: React.FC<ListingClientProps> = ({
         onChange={(value) => setRooms(value)}
         max={listing.roomCount}
       />
-      {additional.map((item, index) => (
-        <div
-          key={item.name}
-          className="flex flex-col gap-2 py-2"
-        >
-          <div className="flex flex-row gap-2">
-            <input
-              type="checkbox"
-              title="additional"
-              onChange={() => {
-                const updatedCheckedItems = [...checkedItems];
-                updatedCheckedItems[index] = !updatedCheckedItems[index];
-                setCheckedItems(updatedCheckedItems);
-              }}
-            />
-            <div className="flex justify-between w-full">
-              <p>{item.name}</p>
-              <p>{formatter.format(item.cost)}</p>
-            </div>
-          </div>
-        </div>
-      ))}
     </div>
   );
 
@@ -254,7 +203,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
               {currentUser ? (
                 <ListingReservation
                   price={listing.price}
-                  totalPrice={total}
+                  totalPrice={totalPrice}
                   onChangeDate={(value) => setDateRange(value)}
                   dateRange={dateRange}
                   onSubmit={onCreateReservation}
@@ -264,7 +213,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
               ) : (
                 <AdminReservation
                   price={listing.price}
-                  totalPrice={total}
+                  totalPrice={totalPrice}
                   onChangeDate={(value) => setDateRange(value)}
                   dateRange={dateRange}
                   onSubmit={adminReservations}

@@ -2,7 +2,6 @@ import prisma from "@/libs/prisma";
 import { NextResponse } from "next/server";
 import { stripe } from "@/libs/stripe";
 import getAdmin from "@/components/actions/getAdmin";
-import { Additional } from "@prisma/client";
 
 export async function POST(request: Request) {
   const admin = await getAdmin();
@@ -33,9 +32,6 @@ export async function POST(request: Request) {
       bed: parseInt(bed, 10),
       fasilitas,
       adminId: admin.id,
-      additional: {
-        create: additional,
-      },
     },
   });
   await stripe.products.create({
@@ -71,7 +67,7 @@ export async function PUT(request: Request) {
     additional,
     discount,
   } = body;
-
+  const { name, cost } = additional;
   const listing = await prisma.listing.update({
     where: {
       id: listingId,
@@ -87,15 +83,6 @@ export async function PUT(request: Request) {
       fasilitas,
       adminId: admin.id,
       discount: parseInt(discount, 10),
-      additional: {
-        create: additional.map((item: Additional) => ({
-          name: item.name,
-          cost: item.cost,
-        })),
-      },
-    },
-    include: {
-      additional: true,
     },
   });
 

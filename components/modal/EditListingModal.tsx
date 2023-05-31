@@ -20,11 +20,10 @@ enum STEPS {
   INFO = 1,
   IMAGES = 2,
   FASILITAS = 3,
-  ADDITIONAL = 4,
-  DISCOUNT = 5,
-  DESCRIPTION = 6,
-  IMAGEPROPMO = 7,
-  PRICE = 8,
+  DISCOUNT = 4,
+  DESCRIPTION = 5,
+  IMAGEPROPMO = 6,
+  PRICE = 7,
 }
 
 type Props = {
@@ -60,7 +59,6 @@ const EditListingModal = ({
       description: listings.description,
       roomCount: listings.roomCount,
       guestCount: listings.guestCount,
-      additional: listings.additional,
       discount: listings.discount,
       listingId: listings.id,
       imagepromo: listings.imagePromo,
@@ -134,12 +132,6 @@ const EditListingModal = ({
       <Button
         onClick={() => onStepClick(STEPS.FASILITAS)}
         label="Fasilitas"
-        outline
-        small
-      />
-      <Button
-        onClick={() => onStepClick(STEPS.ADDITIONAL)}
-        label="Additional Service"
         outline
         small
       />
@@ -233,21 +225,6 @@ const EditListingModal = ({
         <Facility
           value={fasilitas}
           onChange={(value) => setCustomValue("fasilitas", value)}
-        />
-      </div>
-    );
-  }
-
-  if (step === STEPS.ADDITIONAL) {
-    bodyContent = (
-      <div className="flex flex-col gap-8">
-        <Heading
-          title="Layanan tambahan"
-          subtitle="Layanan tambahan apa yang anda punya"
-        />
-        <NearTour
-          value={additional}
-          onChange={(value) => setCustomValue("additional", value)}
         />
       </div>
     );

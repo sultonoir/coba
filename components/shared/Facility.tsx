@@ -42,7 +42,7 @@ const Facility: React.FC<FacilityProps> = ({ value, onChange }) => {
       <div className="mb-4 flex gap-2">
         <input
           className="border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:border-rose-500 w-full"
-          placeholder="Wisata terdekat"
+          placeholder="Tambakan fasilitas"
           type="text"
           value={newTodo}
           onChange={handleInputChange}

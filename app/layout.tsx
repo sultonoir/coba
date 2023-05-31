@@ -9,6 +9,7 @@ import RentModal from "@/components/modal/RentModal";
 import ToasterProvider from "@/providers/ToasterProvider";
 import getAdmin from "@/components/actions/getAdmin";
 import SearchModal from "@/components/modal/SearchModal";
+import HeroModal from "@/components/modal/HeroModal";
 
 const inter = Plus_Jakarta_Sans({ subsets: ["latin"] });
 
@@ -37,13 +38,14 @@ export default async function RootLayout({
         <RegisterModal />
         <LoginModal />
         <RentModal />
+        <HeroModal />
         <Navbar
           currentUser={currentUser}
           notifications={notifications}
           admin={admin}
         />
         <ToasterProvider />
-        <div className="pt-[100px]">{children}</div>
+        <div className="py-[100px]">{children}</div>
       </body>
     </html>
   );

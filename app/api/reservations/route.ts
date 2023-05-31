@@ -36,6 +36,7 @@ export async function POST(request: Request) {
           guestName,
           guestImage,
           adminId,
+          rooms,
         },
       },
     },
@@ -53,14 +54,6 @@ export const PUT = async (request: Request) => {
 
     if (!status || !reservationId) {
       return NextResponse.json({ message: "Tidak ada status" });
-    }
-    const reservation = await prisma.reservation.findUnique({
-      where: {
-        id: reservationId,
-      },
-    });
-    if (!reservation) {
-      return NextResponse.error();
     }
 
     await prisma.reservation.update({

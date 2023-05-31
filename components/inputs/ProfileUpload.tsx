@@ -4,6 +4,8 @@ import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
 import { useCallback } from "react";
 import { TbPhotoPlus } from "react-icons/tb";
+import { useState } from "react";
+import { AiOutlineClose } from "react-icons/ai";
 
 declare global {
   var cloudinary: any;
@@ -16,12 +18,21 @@ interface ProfileUploadProps {
 }
 
 const ProfileUpload: React.FC<ProfileUploadProps> = ({ value, onChange }) => {
+  const [fileValue, setFileValue] = useState(value);
+
   const handleUpload = useCallback(
     (result: any) => {
       onChange(result.info.secure_url);
+      setFileValue(result.info.secure_url);
     },
     [onChange]
   );
+
+  const handleRemove = useCallback(() => {
+    onChange("");
+    setFileValue("");
+  }, [onChange]);
+
   return (
     <CldUploadWidget
       onUpload={handleUpload}
@@ -55,14 +66,31 @@ const ProfileUpload: React.FC<ProfileUploadProps> = ({ value, onChange }) => {
               <TbPhotoPlus size={50} />
               <div className="font-semibold text-lg">Click to upload</div>
             </div>
-            {value && (
+            {fileValue && (
               <div className="relative w-full h-60">
                 <Image
                   fill
                   style={{ objectFit: "cover" }}
-                  src={value}
+                  src={fileValue}
                   alt="House"
                 />
+                <button
+                  aria-hidden="true"
+                  onClick={handleRemove}
+                  className="
+                  absolute
+                  top-2
+                  right-2
+                  bg-white
+                  rounded-full
+                  p-1
+                  shadow
+                  hover:bg-neutral-200
+                  focus:outline-none
+                "
+                >
+                  <AiOutlineClose size={20} />
+                </button>
               </div>
             )}
           </div>

@@ -1,7 +1,5 @@
 import { SafeUser } from "@/types";
 import React from "react";
-import Heading from "../shared/Heading";
-import HearthButton from "../shared/HeartButton";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper.min.css";

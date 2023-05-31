@@ -12,7 +12,6 @@ export default async function getLIstingById(params: Iparams) {
         id: listingId,
       },
       include: {
-        additional: true,
         admin: true,
       },
     });

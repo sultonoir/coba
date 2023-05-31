@@ -17,11 +17,8 @@ enum STEPS {
   DATE = 1,
   INFO = 2,
 }
-interface SearchModalProps {
-  districts: any;
-}
 
-const SearchModal = ({ districts }: SearchModalProps) => {
+const SearchModal = () => {
   const router = useRouter();
   const searchModal = useSearchModal();
   const params = useSearchParams();
@@ -79,16 +76,7 @@ const SearchModal = ({ districts }: SearchModalProps) => {
     setStep(STEPS.DATE);
     searchModal.onClose();
     router.push(url);
-  }, [
-    step,
-    searchModal,
-    location,
-    router,
-    roomCount,
-    dateRange,
-    onNext,
-    params,
-  ]);
+  }, [step, searchModal, router, roomCount, dateRange, onNext, params]);
 
   const actionLabel = useMemo(() => {
     if (step === STEPS.INFO) {
@@ -131,6 +119,7 @@ const SearchModal = ({ districts }: SearchModalProps) => {
           value={guestCount}
           title="Guests"
           subtitle="How many guests are coming?"
+          max={2}
         />
         <hr />
         <Counter
