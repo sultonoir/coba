@@ -31,7 +31,7 @@ const EmptyState = ({
         {showReset && (
           <Button
             outline
-            label="Hapus semua filter"
+            label="back to main page"
             onClick={() => router.push("/")}
           />
         )}

@@ -10,6 +10,8 @@ import ToasterProvider from "@/providers/ToasterProvider";
 import getAdmin from "@/components/actions/getAdmin";
 import SearchModal from "@/components/modal/SearchModal";
 import HeroModal from "@/components/modal/HeroModal";
+import getListings from "@/components/actions/getListings";
+import ReservationModal from "@/components/modal/ReservationModal";
 
 const inter = Plus_Jakarta_Sans({ subsets: ["latin"] });
 
@@ -26,6 +28,7 @@ export default async function RootLayout({
   const currentUser = await getCurrentUser();
   const notifications = await getNotifications({ userId: currentUser?.id });
   const admin = await getAdmin();
+  const listings = await getListings({ adminId: admin?.id });
   return (
     <html lang="en">
       <link
@@ -44,6 +47,7 @@ export default async function RootLayout({
           notifications={notifications}
           admin={admin}
         />
+        <ReservationModal listings={listings} />
         <ToasterProvider />
         <div className="py-[100px]">{children}</div>
       </body>

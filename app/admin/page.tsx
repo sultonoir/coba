@@ -3,12 +3,18 @@ import getReservations from "@/components/actions/getReservations";
 import EmptyState from "@/components/shared/EmptyState";
 import React from "react";
 import { columns, Payment } from "./columns";
-import { DataTable } from "./properti/data-table";
+import { DataTable } from "./data-table";
 
 const page = async () => {
   const admin = await getAdmin();
   if (!admin) {
-    return <EmptyState />;
+    return (
+      <EmptyState
+        title="not admins"
+        subtitle="back to main page"
+        showReset
+      />
+    );
   }
 
   const reservations = await getReservations({ authorId: admin?.id });
@@ -21,6 +27,8 @@ const page = async () => {
     checkout: data.endDate,
     rooms: data.rooms,
     title: data.listing.title,
+    email: data.user?.email,
+    userId: data.userId,
   }));
 
   return (

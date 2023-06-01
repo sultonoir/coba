@@ -15,8 +15,7 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
+
 export type Payment = {
   amount: number;
   status: string | null;
@@ -26,6 +25,8 @@ export type Payment = {
   rooms: number;
   title: string;
   id: string;
+  email: string | null | undefined;
+  userId: string | null;
 };
 
 export const columns: ColumnDef<Payment>[] = [
@@ -77,6 +78,10 @@ export const columns: ColumnDef<Payment>[] = [
     header: "Title",
   },
   {
+    accessorKey: "email",
+    header: "Email",
+  },
+  {
     accessorKey: "rooms",
     header: "Rooms",
   },
@@ -108,6 +113,7 @@ export const columns: ColumnDef<Payment>[] = [
             status: "Complete",
             reservationId: payment.id,
             room: payment.rooms,
+            userId: payment.userId,
           })
           .then(() => {
             toast.success("Complete");

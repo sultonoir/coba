@@ -37,39 +37,60 @@ export async function DELETE(
 }
 
 export async function PUT(request: Request, { params }: { params: IParams }) {
+  const admin = await getAdmin();
+  if (!admin) {
+    return NextResponse.error();
+  }
+
   const body = await request.json();
-  const { status, room } = body;
+  const { status, room, userId } = body;
   const { reservationId } = params;
+
+  let update: any = {};
+
+  if (userId !== null) {
+    update.status = status;
+    update.listing = {
+      update: {
+        roomCount: {
+          increment: room,
+        },
+      },
+    };
+    update.user = {
+      update: {
+        notifi: {
+          create: {
+            message:
+              "thank you for staying at our hotel, don't forget to give ratings",
+            guestName: admin.name,
+            guestImage: admin.image,
+          },
+        },
+        notification: true,
+      },
+    };
+  } else {
+    update.status = status;
+    update.listing = {
+      update: {
+        roomCount: {
+          increment: room,
+        },
+      },
+    };
+  }
+
   try {
     const reservation = await prisma.reservation.update({
       where: {
         id: reservationId,
       },
-      data: {
-        status,
-        listing: {
-          update: {
-            roomCount: {
-              increment: room,
-            },
-          },
-        },
-        user: {
-          update: {
-            notifi: {
-              create: {
-                message:
-                  "thank you for staying at our hotel, don't forget to give ratings",
-              },
-            },
-            notification: true,
-          },
-        },
-      },
+      data: update,
     });
 
     return NextResponse.json(reservation);
   } catch (error) {
-    return NextResponse.json({ message: "Error" });
+    return NextResponse.error();
   }
 }

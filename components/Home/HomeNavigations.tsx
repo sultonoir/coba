@@ -13,8 +13,8 @@ const HomeNavigations = () => {
         explore our hotel
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-6 h-full">
-        <div className="relative h-full col-span-1 group overflow-hidden">
-          <Link href={`/rooms`}>
+        <Link href={`/rooms`}>
+          <div className="relative h-full col-span-1 group overflow-hidden">
             <Image
               src={`/rooms.jpg`}
               alt={`rooms`}
@@ -28,10 +28,10 @@ const HomeNavigations = () => {
             <p className="z-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 items-center text-white text-center capitalize group-hover:underline text-2xl">
               rooms
             </p>
-          </Link>
-        </div>
-        <div className="relative h-full col-span-1 group overflow-hidden">
-          <Link href={`/fasilitas`}>
+          </div>
+        </Link>
+        <Link href={`/fasilitas`}>
+          <div className="relative h-full col-span-1 group overflow-hidden">
             <Image
               src={`/sky.jpg`}
               alt={`rooms`}
@@ -45,8 +45,8 @@ const HomeNavigations = () => {
             <p className="z-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 items-center text-white text-center capitalize group-hover:underline text-2xl">
               Facilities
             </p>
-          </Link>
-        </div>
+          </div>
+        </Link>
       </div>
     </div>
   );
