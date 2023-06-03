@@ -20,17 +20,13 @@ const TripsPage = async () => {
     );
   }
 
-  const reservation = await getResrvStatus({ userSucces: currentUser.id });
-  const completedByhost = await getResrvStatus({
-    userCompletedByHost: currentUser.id,
-  });
-  const completed = await getResrvStatus({ userCompleted: currentUser.id });
+  const complete = await getResrvStatus({ complete: currentUser?.id });
+  const completed = await getResrvStatus({ completed: currentUser?.id });
 
   return (
     <TripsClient
       currentUser={currentUser}
-      reservations={reservation}
-      completedByhost={completedByhost}
+      complete={complete}
       completed={completed}
     />
   );

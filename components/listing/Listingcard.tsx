@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { format } from "date-fns";
 import Button from "../shared/Button";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper.min.css";
@@ -12,9 +11,7 @@ import BluredImage from "../shared/BluredImage";
 import { BiChevronLeft, BiChevronRight, BiUser } from "react-icons/bi";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import Image from "next/image";
 import useRatingsModal from "@/hooks/useRatings";
-import RatingsModal from "../modal/RatingsModal";
 import ButtonConfirm from "../shared/ButtonConfrim";
 import { Playfair_Display } from "next/font/google";
 import { IoBedOutline } from "react-icons/io5";
@@ -33,7 +30,6 @@ interface ListingCardProps {
   actionLabel?: string;
   actionId?: string;
   currentUser?: SafeUser | null;
-  guest?: boolean;
   edit?: boolean;
   payment?: boolean;
   completed?: boolean;
@@ -48,7 +44,6 @@ const ListingCard: React.FC<ListingCardProps> = ({
   actionLabel,
   actionId = "",
   currentUser,
-  guest,
   payment,
   completed,
   host,
@@ -86,17 +81,6 @@ const ListingCard: React.FC<ListingCardProps> = ({
     const formattedPrice = formatter.format(data.price);
     return formattedPrice;
   }, [reservation, data.price]);
-
-  const reservationDate = useMemo(() => {
-    if (!reservation) {
-      return null;
-    }
-
-    const start = new Date(reservation.startDate);
-    const end = new Date(reservation.endDate);
-
-    return `${format(start, "PP")} - ${format(end, "PP")}`;
-  }, [reservation]);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -145,49 +129,14 @@ const ListingCard: React.FC<ListingCardProps> = ({
   }, [reservation?.status]);
 
   const onCompleted = useCallback(() => {
-    if (reservation?.status === "success") {
-      setIsLoading(true);
-      axios
-        .put("api/reservations", {
-          status: "completed",
-          reservationId: reservation?.id,
-        })
-        .then(() => {
-          toast.success("Menyelesaikan reservasi");
-          ratingModal.onOpen();
-        })
-        .catch((error) => {
-          toast.error(error.message);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    }
-    if (reservation?.status === "completedByhost") {
-      setIsLoading(true);
-      axios
-        .put("api/reservations", {
-          status: "completed",
-          reservationId: reservation?.id,
-        })
-        .then((e) => {
-          ratingModal.onOpen();
-        })
-        .catch((error) => {
-          toast.error(error.message);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
+    if (reservation?.status === "Complete") {
+      ratingModal.onOpen();
     }
   }, [reservation?.status]);
 
   const labelCompletd = useMemo(() => {
-    if (reservation?.status === "success") {
-      return "Konfirmasi Selesai";
-    }
-    if (reservation?.status === "completedByhost") {
-      return "Berikan penilaian";
+    if (reservation?.status === "Complete") {
+      return "Give ratings";
     }
   }, [reservation?.status]);
 
@@ -203,7 +152,6 @@ const ListingCard: React.FC<ListingCardProps> = ({
   };
   return (
     <div className="sm:col-span-4 xl:col-span-2 group relative shadow-sm border rounded-xl overflow-hidden">
-      <RatingsModal listingId={data.id} />
       <EditListingModal
         listings={data}
         editModalVisible={editModalVisible}
@@ -250,41 +198,6 @@ const ListingCard: React.FC<ListingCardProps> = ({
             </div>
           </Swiper>
         </div>
-        <div className="flex flex-row gap-5 items-center justify-evenly">
-          <div className="flex flex-col items-center justify-center">
-            <BiUser
-              size={20}
-              className="text-rose-500"
-            />
-            <p>Capacity</p>
-            <p className="text-neutral-500">{data.guestCount} Person</p>
-          </div>
-          <div className="flex flex-col items-center justify-center">
-            <IoBedOutline
-              size={20}
-              className="text-rose-500"
-            />
-            <p>Bed</p>
-            <p className="text-neutral-500">{data.bed} Bed</p>
-          </div>
-        </div>
-        {guest && (
-          <div className="flex flex-row gap-2">
-            <span className="w-10 h-10">
-              <Image
-                alt="Avatar"
-                width={40}
-                height={40}
-                src={reservation?.guestImage || `/placeholder.jpg`}
-                className="rounded-full aspect-square"
-              />
-            </span>
-            <p className="font-light text-neutral-500">
-              {reservation?.guestName}
-            </p>
-          </div>
-        )}
-        <div className="font-light text-neutral-500">{reservationDate}</div>
         <div className="flex flex-row justify-between px-2">
           <div className="flex flex-col">
             <p
@@ -297,18 +210,32 @@ const ListingCard: React.FC<ListingCardProps> = ({
               {!reservation && <p className="font-light">/ Night</p>}
             </div>
           </div>
-          <div className="flex items-center">
-            <Link
-              href={`listings/${data.id}`}
-              className="border-rose-500 border px-2 py-1 rounded-lg hover:bg-rose-500 hover:text-white hover:underline"
-            >
-              Details
-            </Link>
+        </div>
+        <div className="flex flex-row gap-5 items-center justify-evenly">
+          <div className="flex flex-row items-center justify-center">
+            <BiUser
+              size={20}
+              className="text-rose-500"
+            />
+            <p className="text-neutral-500">{data.guestCount} Person</p>
+          </div>
+          <div className="flex flex-row items-center justify-center">
+            <IoBedOutline
+              size={20}
+              className="text-rose-500"
+            />
+            <p className="text-neutral-500">{data.bed} Bed</p>
           </div>
         </div>
       </div>
       <div className="flex flex-col gap-y-2 px-2 py-1">
         <div className="flex gap-2">
+          <Link
+            href={`listings/${data.id}`}
+            className="border-rose-500 border px-2 py-1 rounded-lg hover:bg-rose-500 hover:text-white hover:underline w-full text-center"
+          >
+            Details
+          </Link>
           {edit && (
             <Button
               onClick={handleEditClick}
@@ -333,6 +260,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
               small
               label="bayar"
               disabled={isLoading}
+              confirm
             />
           </div>
         )}
@@ -343,7 +271,6 @@ const ListingCard: React.FC<ListingCardProps> = ({
               onClick={onCompleted}
               small
               label={labelCompletd}
-              disabled={isLoading}
             />
           </div>
         )}

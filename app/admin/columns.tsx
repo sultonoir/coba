@@ -20,7 +20,7 @@ export type Payment = {
   amount: number;
   status: string | null;
   name: string | null;
-  checkin: string;
+  checkin: Date;
   checkout: string;
   rooms: number;
   title: string;
@@ -52,9 +52,34 @@ export const columns: ColumnDef<Payment>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "checkin",
-    header: "check In date",
+    accessorKey: "name",
+    header: "Name",
   },
+  {
+    accessorKey: "checkin",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Check in
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const checkin = new Date(row.getValue("checkin"));
+      const formatted = new Intl.DateTimeFormat("id-ID", {
+        day: "numeric",
+        month: "numeric",
+        year: "numeric",
+      }).format(checkin);
+
+      return <div className="text-center font-medium">{formatted}</div>;
+    },
+  },
+
   {
     accessorKey: "checkout",
     header: ({ column }) => {
@@ -67,6 +92,16 @@ export const columns: ColumnDef<Payment>[] = [
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
+    },
+    cell: ({ row }) => {
+      const checkin = new Date(row.getValue("checkout"));
+      const formatted = new Intl.DateTimeFormat("id-ID", {
+        day: "numeric",
+        month: "numeric",
+        year: "numeric",
+      }).format(checkin);
+
+      return <div className="font-medium text-center">{formatted}</div>;
     },
   },
   {
@@ -84,10 +119,6 @@ export const columns: ColumnDef<Payment>[] = [
   {
     accessorKey: "rooms",
     header: "Rooms",
-  },
-  {
-    accessorKey: "name",
-    header: "Name",
   },
   {
     accessorKey: "amount",

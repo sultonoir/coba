@@ -1,7 +1,6 @@
 import prisma from "@/libs/prisma";
 
 export interface IListingsParams {
-  adminId?: string;
   guestCount?: number;
   roomCount?: number;
   bathroomCount?: number;
@@ -13,14 +12,9 @@ export interface IListingsParams {
 
 export default async function getListings(params: IListingsParams) {
   try {
-    const { adminId, roomCount, guestCount, startDate, endDate } = params;
+    const { roomCount, guestCount } = params;
 
     let query: any = {};
-
-    if (adminId) {
-      query.adminId = adminId;
-    }
-
     if (roomCount) {
       query.roomCount = {
         gte: +roomCount,

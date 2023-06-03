@@ -64,7 +64,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
         listingId: listing?.id,
         guestName: currentUser.name,
         guestImage: currentUser.image,
-        adminId: currentUser.id,
+        adminId: currentUser.adminId,
         status: "pending",
         rooms,
       })

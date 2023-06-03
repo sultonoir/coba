@@ -1,30 +1,17 @@
-import HomeHero from "@/components/Home/HomeHero";
-import HomeNavigations from "@/components/Home/HomeNavigations";
-import HomeProfile from "@/components/Home/HomePofile";
-import HomePromosi from "@/components/Home/HomePromosi";
-import getListings, { IListingsParams } from "@/components/actions/getListings";
 import getPromosi from "@/components/actions/getPromosi";
 import getRatings from "@/components/actions/getRatings";
-import Container from "@/components/shared/Container";
-import EmptyState from "@/components/shared/EmptyState";
-interface HomeProps {
-  searchParams: IListingsParams;
-}
+import HomeClient from "./HomeClient";
+import { getAllListing } from "@/components/actions/getAllListing";
 
-export default async function Home({ searchParams }: HomeProps) {
-  const listings = await getListings(searchParams);
+export default async function Home() {
   const ratings = await getRatings();
-
-  if (listings.length === 0) {
-    return <EmptyState showReset />;
-  }
   const promosi = await getPromosi();
+  const listings = await getAllListing();
   return (
-    <Container>
-      <HomeHero listings={listings} />
-      <HomeProfile ratings={ratings} />
-      <HomeNavigations />
-      <HomePromosi promosi={promosi} />
-    </Container>
+    <HomeClient
+      listings={listings}
+      ratings={ratings}
+      promosi={promosi}
+    />
   );
 }

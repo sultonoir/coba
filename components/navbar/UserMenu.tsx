@@ -1,8 +1,8 @@
 "use client";
 
-import { SafeNotifications, SafeReservation, SafeUser } from "@/types";
+import { SafeUser } from "@/types";
 import { Menu, Transition } from "@headlessui/react";
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { Fragment } from "react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { SlLogout } from "react-icons/sl";
@@ -11,8 +11,7 @@ import useRegisterModal from "@/hooks/useRegisterModal";
 import useLoginModal from "@/hooks/useLoginModal";
 import { AiOutlineMenu } from "react-icons/ai";
 import Avatar from "../shared/Avatar";
-import useRentModal from "@/hooks/useRentModal";
-import { BiPlus, BiUser } from "react-icons/bi";
+import { BiUser } from "react-icons/bi";
 import { MdOutlinePayments } from "react-icons/md";
 import { RiCalendarCheckLine } from "react-icons/ri";
 import Notifications from "../shared/Notifications";
@@ -20,44 +19,19 @@ import { HiOutlinePaperAirplane } from "react-icons/hi2";
 
 interface UserMenuProps {
   currentUser: SafeUser | null;
-  notifications: SafeNotifications[];
 }
 
-const UserMenu: React.FC<UserMenuProps> = ({ currentUser, notifications }) => {
+const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
   const registerModal = useRegisterModal();
   const loginModal = useLoginModal();
-  const rentModal = useRentModal();
   const router = useRouter();
-  const onRent = useCallback(() => {
-    if (!currentUser) {
-      return loginModal.onOpen();
-    }
-    rentModal.onOpen();
-  }, [currentUser, loginModal]);
   return (
     <Menu
       as="div"
       className="relative inline-block text-left"
     >
       <div className="flex flex-row items-center gap-3">
-        <div
-          onClick={onRent}
-          className="hidden md:block text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer"
-        >
-          Mode tuan rumah
-        </div>
-        <div
-          onClick={rentModal.onOpen}
-          className="md:hidden p-3 border border-neutral-200 hover:shadow-md transition cursor-pointer rounded-full"
-        >
-          <BiPlus size={20} />
-        </div>
-        {currentUser && (
-          <Notifications
-            notifications={notifications}
-            currentUser={currentUser}
-          />
-        )}
+        {currentUser && <Notifications currentUser={currentUser} />}
         <Menu.Button className="p-3 md:py-1 md:px-2 border-[1px] border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition relative">
           <AiOutlineMenu size={20} />
           <div className="hidden md:block">

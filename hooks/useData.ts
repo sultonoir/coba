@@ -10,9 +10,9 @@ const useData = (params: string) => {
   const { data, error } = useSWR(params, fetcher);
 
   return {
-    anyData: data,
+    data: data,
     isLoading: !error && !data,
-    isError: error,
+    error: error,
   };
 };
 

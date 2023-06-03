@@ -8,6 +8,9 @@ import { BiSearch } from "react-icons/bi";
 const Search = () => {
   const searchModal = useSearchModal();
   const params = useSearchParams();
+  if (!params) {
+    return null;
+  }
   const roomCount = params?.get("roomCount");
   const startDate = params?.get("startDate");
   const endDate = params?.get("endDate");

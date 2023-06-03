@@ -1,59 +1,34 @@
 "use client";
-import React, { useCallback, useState } from "react";
-import axios from "axios";
+import HomeHero from "@/components/Home/HomeHero";
+import HomeNavigations from "@/components/Home/HomeNavigations";
+import HomeProfile from "@/components/Home/HomePofile";
+import HomePromosi from "@/components/Home/HomePromosi";
+import EmptyState from "@/components/shared/EmptyState";
+import { SafeListing } from "@/types";
+import { Hero, Rating } from "@prisma/client";
+import React from "react";
 
-const HomeClient = () => {
-  const [name, setName] = useState("");
-  const [images, setImages] = useState<any>([]);
-  const [price, setPrice] = useState(0);
+interface HomeClientProps {
+  listings: SafeListing[];
+  ratings: Rating[];
+  promosi: Hero[];
+}
 
-  const handleSubmit = useCallback(async () => {
-    try {
-      const formData = new FormData();
-      formData.append("name", name);
-      formData.append("price", price.toString());
-
-      for (let i = 0; i < images.length; i++) {
-        formData.append("images", images[i]);
-      }
-
-      await axios.post("api/webhooks/", formData);
-    } catch (error) {
-      console.error(error);
-    }
-  }, [name, price, images]);
-
-  const handleImageUpload = (e: any) => {
-    const files = Array.from(e.target.files);
-    setImages(files);
-  };
-
+const HomeClient: React.FC<HomeClientProps> = ({
+  listings,
+  ratings,
+  promosi,
+}) => {
+  if (listings.length === 0) {
+    return <EmptyState showReset />;
+  }
   return (
-    <div>
-      <input
-        className="p-4 border-red-500"
-        type="file"
-        title="image"
-        accept="image/*"
-        multiple
-        onChange={handleImageUpload}
-      />
-      <input
-        className="p-4 border-red-500"
-        type="text"
-        placeholder="Nama Produk"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <input
-        className="p-4 border-red-500"
-        type="number"
-        placeholder="Harga"
-        value={price}
-        onChange={(e) => setPrice(Number(e.target.value))}
-      />
-      <button onClick={handleSubmit}>Submit</button>
-    </div>
+    <>
+      <HomeHero listings={listings} />
+      <HomeProfile ratings={ratings} />
+      <HomeNavigations />
+      <HomePromosi promosi={promosi} />
+    </>
   );
 };
 

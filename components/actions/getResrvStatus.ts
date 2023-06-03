@@ -3,26 +3,12 @@ interface IParams {
   listingId?: string;
   userId?: string;
   authorId?: string;
-  userSucces?: string;
-  userCompletedByHost?: string;
-  userCompleted?: string;
-  hostSucces?: string;
-  hostCompletedByHost?: string;
-  hostComplted?: string;
+  complete?: string;
+  completed?: string;
 }
 
 export default async function getResrvStatus(params: IParams) {
-  const {
-    listingId,
-    userId,
-    authorId,
-    userSucces,
-    userCompleted,
-    userCompletedByHost,
-    hostSucces,
-    hostCompletedByHost,
-    hostComplted,
-  } = params;
+  const { listingId, userId, authorId, complete, completed } = params;
 
   const query: any = {};
 
@@ -35,17 +21,17 @@ export default async function getResrvStatus(params: IParams) {
     query.userId = userId;
   }
 
-  if (authorId) {
+  if (complete) {
     const user = await prisma.user.findUnique({
       where: {
-        id: authorId,
+        id: complete,
       },
     });
 
     if (user?.notification) {
       await prisma.user.update({
         where: {
-          id: authorId,
+          id: complete,
         },
         data: {
           notification: false,
@@ -53,35 +39,15 @@ export default async function getResrvStatus(params: IParams) {
       });
     }
 
-    query.listing = { userId: authorId };
+    query.status = "Complete";
+    query.userId = complete;
   }
 
-  if (userSucces) {
-    query.status = "success";
-    query.userId = userSucces;
-  }
-  if (userCompletedByHost) {
-    query.status = "completedByhost";
-    query.userId = userCompletedByHost;
-  }
-  if (userCompleted) {
-    query.status = "completed";
-    query.userId = userCompleted;
+  if (completed) {
+    query.status = "Completed";
+    query.userId = completed;
   }
 
-  if (hostSucces) {
-    query.status = "success";
-    query.listing = { userId: hostSucces };
-  }
-
-  if (hostCompletedByHost) {
-    query.status = "completedByHost";
-    query.listing = { userId: hostCompletedByHost };
-  }
-  if (hostComplted) {
-    query.status = "completed";
-    query.listing = { userId: hostComplted };
-  }
   try {
     const reservations = await prisma.reservation.findMany({
       where: query,

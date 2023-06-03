@@ -9,64 +9,25 @@ import Heading from "../../components/shared/Heading";
 import ListingCard from "../../components/listing/Listingcard";
 import EmptyState from "@/components/shared/EmptyState";
 interface TripsClientProps {
-  reservations: SafeReservation[];
   currentUser: SafeUser | null;
-  completedByhost: SafeReservation[];
+  complete: SafeReservation[];
   completed: SafeReservation[];
 }
 
 const TripsClient: React.FC<TripsClientProps> = ({
-  reservations,
   currentUser,
-  completedByhost,
+  complete,
   completed,
 }) => {
-  const router = useRouter();
-  const [deletingId, setDeletingId] = useState("");
-
-  const onCancel = useCallback(
-    (id: string) => {
-      setDeletingId(id);
-      axios
-        .delete(`/api/reservations/${id}`)
-        .then(() => {
-          toast.success("Reservation canceled");
-          router.refresh();
-        })
-        .catch((error) => {
-          toast.error(error?.response?.data?.error);
-        })
-        .finally(() => {
-          setDeletingId("");
-        });
-    },
-    [router]
-  );
+  console.log(complete);
   return (
     <Container>
       <Heading
         title="Trips"
         subtitle="Your trips history"
       />
-      <div className="mt-10 grid grid-cols-1 md:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
-        {reservations.map((reservation) => {
-          return (
-            <ListingCard
-              key={reservation.id}
-              data={reservation.listing}
-              reservation={reservation}
-              actionId={reservation.id}
-              onAction={onCancel}
-              disabled={deletingId === reservation.id}
-              actionLabel="Cancel reservation"
-              currentUser={currentUser}
-              completed
-            />
-          );
-        })}
-      </div>
       <div className="mt-2 grid grid-cols-1 md:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
-        {completedByhost.map((reservation) => {
+        {complete.map((reservation) => {
           return (
             <ListingCard
               key={reservation.id}

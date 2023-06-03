@@ -2,38 +2,48 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
 import getAdmin from "@/components/actions/getAdmin";
 import getCurrentUser from "@/components/actions/getCurrentUser";
+import { pusherServer } from "@/libs/pusher";
 
 interface IParams {
-  reservationId?: string;
+  reservationId: string;
 }
 
 export async function DELETE(
   request: Request,
   { params }: { params: IParams }
 ) {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.error();
-  }
-  const admin = await getAdmin();
-  if (!admin) {
-    return NextResponse.error();
-  }
-
   const { reservationId } = params;
 
   if (!reservationId || typeof reservationId !== "string") {
     throw new Error("Invalid ID");
   }
 
-  const reservation = await prisma.reservation.deleteMany({
+  const res = await prisma.reservation.findUnique({
     where: {
       id: reservationId,
-      OR: [{ adminId: user.adminId }, { listing: { adminId: admin.id } }],
     },
   });
 
-  return NextResponse.json(reservation);
+  const listings = await prisma.listing.update({
+    where: {
+      id: res?.listingId,
+    },
+    data: {
+      roomCount: {
+        increment: res?.rooms,
+      },
+      reservations: {
+        deleteMany: {
+          id: res?.id,
+          listingId: res?.listingId,
+          userId: res?.userId,
+          adminId: res?.adminId,
+        },
+      },
+    },
+  });
+
+  return NextResponse.json(listings);
 }
 
 export async function PUT(request: Request, { params }: { params: IParams }) {
@@ -89,6 +99,7 @@ export async function PUT(request: Request, { params }: { params: IParams }) {
       data: update,
     });
 
+    await pusherServer.trigger(reservationId, "reservation:new", reservation);
     return NextResponse.json(reservation);
   } catch (error) {
     return NextResponse.error();

@@ -69,6 +69,8 @@ export const PUT = async (request: Request) => {
                 message: "Mereservasi",
                 guestName: currentUser.name,
                 guestImage: currentUser.image,
+                adminId: currentUser.adminId,
+                reservationId: reservationId,
               },
             },
             admin: {

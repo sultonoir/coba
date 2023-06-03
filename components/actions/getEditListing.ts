@@ -6,7 +6,6 @@ export default async function getEditListing(listingId: string) {
       id: listingId,
     },
     include: {
-      additional: true,
       admin: true,
     },
   });

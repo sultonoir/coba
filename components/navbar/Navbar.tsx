@@ -12,15 +12,10 @@ import useLoginModal from "@/hooks/useLoginModal";
 
 interface navbarProps {
   currentUser: SafeUser | null;
-  notifications: SafeNotifications[];
   admin: SafeAdmin | null;
 }
 
-const navbar: React.FC<navbarProps> = ({
-  currentUser,
-  notifications,
-  admin,
-}) => {
+const navbar: React.FC<navbarProps> = ({ currentUser, admin }) => {
   const loginModal = useLoginModal();
   return (
     <div className="fixed w-full bg-white z-50 shadow-sm">
@@ -34,12 +29,7 @@ const navbar: React.FC<navbarProps> = ({
               {!currentUser && !admin && <Navlink items={NavItem} />}
             </span>
             {admin && <AdminMenu admin={admin} />}
-            {currentUser && (
-              <UserMenu
-                currentUser={currentUser}
-                notifications={notifications}
-              />
-            )}
+            {currentUser && <UserMenu currentUser={currentUser} />}
             {!currentUser && !admin && (
               <button
                 className="px-2 py-1 bg-rose-500 text-white hover:bg-rose-600 active:scale-90 transition rounded-lg"

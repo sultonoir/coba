@@ -2,7 +2,6 @@ import "./globals.css";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import Navbar from "../components/navbar/Navbar";
 import getCurrentUser from "@/components/actions/getCurrentUser";
-import getNotifications from "@/components/actions/getNotifications";
 import RegisterModal from "@/components/modal/RegisterModal";
 import LoginModal from "@/components/modal/LoginModal";
 import RentModal from "@/components/modal/RentModal";
@@ -10,8 +9,9 @@ import ToasterProvider from "@/providers/ToasterProvider";
 import getAdmin from "@/components/actions/getAdmin";
 import SearchModal from "@/components/modal/SearchModal";
 import HeroModal from "@/components/modal/HeroModal";
-import getListings from "@/components/actions/getListings";
 import ReservationModal from "@/components/modal/ReservationModal";
+import RatingsModal from "@/components/modal/RatingsModal";
+import getListingAdmin from "@/components/actions/getlListingsAdmin";
 
 const inter = Plus_Jakarta_Sans({ subsets: ["latin"] });
 
@@ -26,9 +26,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const currentUser = await getCurrentUser();
-  const notifications = await getNotifications({ userId: currentUser?.id });
   const admin = await getAdmin();
-  const listings = await getListings({ adminId: admin?.id });
+  const listings = await getListingAdmin({ adminId: admin?.id });
   return (
     <html lang="en">
       <link
@@ -37,6 +36,7 @@ export default async function RootLayout({
         href="/logo.svg"
       />
       <body className={inter.className}>
+        <RatingsModal />
         <SearchModal />
         <RegisterModal />
         <LoginModal />
@@ -44,7 +44,6 @@ export default async function RootLayout({
         <HeroModal />
         <Navbar
           currentUser={currentUser}
-          notifications={notifications}
           admin={admin}
         />
         <ReservationModal listings={listings} />

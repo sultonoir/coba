@@ -1,48 +1,47 @@
+import React from "react";
 import Select from "react-select";
-import { District } from "territory-indonesia";
 
-export interface safeDist {
+export type CountrySelectValue = {
   value: string;
-  altName: string;
-  latlng: number[];
-}
+};
+
+const options = [
+  { value: "Cleanliness" },
+  { value: "Comfort" },
+  { value: "Service" },
+];
 interface CountrySelectProps {
-  value?: safeDist;
-  onChange: (value: safeDist) => void;
-  districts: safeDist[];
+  value?: CountrySelectValue;
+  onChange: (value: CountrySelectValue) => void;
 }
 
-const CountrySelect = ({ value, onChange, districts }: CountrySelectProps) => {
+const CountrySelect: React.FC<CountrySelectProps> = ({ value, onChange }) => {
   return (
-    <div>
-      <Select
-        placeholder="Anywhere"
-        isClearable
-        options={districts}
-        value={value}
-        onChange={(value) => onChange(value as safeDist)}
-        formatOptionLabel={(option: any) => (
-          <div className="flex flex-col gap-y-1">
-            <p>{option.value}</p>
-            <p>{option.altName}</p>
-          </div>
-        )}
-        classNames={{
-          control: () => "p-3 border-2",
-          input: () => "text-lg",
-          option: () => "text-lg",
-        }}
-        theme={(theme) => ({
-          ...theme,
-          borderRadius: 6,
-          colors: {
-            ...theme.colors,
-            primary: "black",
-            primary25: "#ffe4e6",
-          },
-        })}
-      />
-    </div>
+    <Select
+      placeholder="Select one"
+      options={options}
+      value={value}
+      onChange={(value) => onChange(value as CountrySelectValue)}
+      formatOptionLabel={(option: any) => (
+        <div className="flex flex-row items-center gap-3">
+          <div>{option.value}</div>
+        </div>
+      )}
+      classNames={{
+        control: () => "p-3 border-2",
+        input: () => "text-lg",
+        option: () => "text-lg",
+      }}
+      theme={(theme) => ({
+        ...theme,
+        borderRadius: 6,
+        colors: {
+          ...theme.colors,
+          primary: "black",
+          primary25: "#ffe4e6",
+        },
+      })}
+    />
   );
 };
 

@@ -8,12 +8,9 @@ import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Modal from "./Modal";
 import useRatingsModal from "@/hooks/useRatings";
+import CountrySelect from "../inputs/CountrySelect";
 
-interface RatingsModalProps {
-  listingId: string;
-}
-
-const RatingsModal: React.FC<RatingsModalProps> = ({ listingId }) => {
+const RatingsModal = () => {
   const ratingModal = useRatingsModal();
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -26,12 +23,12 @@ const RatingsModal: React.FC<RatingsModalProps> = ({ listingId }) => {
   } = useForm<FieldValues>({
     defaultValues: {
       value: 1,
-      message: "",
-      listingId,
+      type: null,
     },
   });
 
   const value = watch("value");
+  const type = watch("type");
 
   const setCustomValue = (id: string, value: any) => {
     setValue(id, value, {
@@ -62,17 +59,21 @@ const RatingsModal: React.FC<RatingsModalProps> = ({ listingId }) => {
     <div className="flex flex-col gap-3">
       <Counter
         title="Ratings"
-        subtitle="Kami akan sangat menghargai jika Anda memberikan rating"
+        subtitle="We would really appreciate it if you give a ratings"
         value={value}
         onChange={(value) => setCustomValue("value", value)}
         max={5}
       />
+      <CountrySelect
+        value={type}
+        onChange={(type) => setCustomValue("type", type)}
+      />
       <TextArea
-        id="description"
+        id="message"
         disabled={isLoading}
         register={register}
         errors={errors}
-        label="description"
+        label="message"
       />
     </div>
   );

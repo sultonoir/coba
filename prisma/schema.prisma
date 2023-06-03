@@ -131,6 +131,7 @@ model Rating{
   userId          String?        @db.ObjectId
   listingId       String?        @db.ObjectId  
   message         String
+  type            String
   guestName       String?
   guestImage      String?
   user            User?          @relation(fields: [userId], references: [id], onDelete: Cascade)

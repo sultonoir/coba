@@ -47,3 +47,16 @@ export async function POST(request: Request) {
   });
   return NextResponse.json(listingAndReservation);
 }
+
+export const GET = async (req: NextRequest) => {
+  try {
+    const reservations = await prisma.reservation.findMany({
+      include: {
+        listing: true,
+      },
+    });
+    return NextResponse.json(reservations);
+  } catch (error) {
+    return NextResponse.error();
+  }
+};
