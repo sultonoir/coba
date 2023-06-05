@@ -53,6 +53,7 @@ export const GET = async (req: NextRequest) => {
     const reservations = await prisma.reservation.findMany({
       include: {
         listing: true,
+        user: true,
       },
     });
     return NextResponse.json(reservations);

@@ -9,13 +9,20 @@ import { Navlink } from "../admin/Navlink";
 import { NavItem } from "@/types";
 import { adminNav } from "@/types";
 import useLoginModal from "@/hooks/useLoginModal";
+import useData from "@/hooks/useData";
+import { Admin, Notification } from "@prisma/client";
 
 interface navbarProps {
   currentUser: SafeUser | null;
   admin: SafeAdmin | null;
+  notifi:
+    | (Admin & {
+        notifi: Notification[];
+      })
+    | null;
 }
 
-const navbar: React.FC<navbarProps> = ({ currentUser, admin }) => {
+const navbar: React.FC<navbarProps> = ({ currentUser, admin, notifi }) => {
   const loginModal = useLoginModal();
   return (
     <div className="fixed w-full bg-white z-50 shadow-sm">
@@ -28,7 +35,12 @@ const navbar: React.FC<navbarProps> = ({ currentUser, admin }) => {
               {admin && <Navlink items={adminNav} />}
               {!currentUser && !admin && <Navlink items={NavItem} />}
             </span>
-            {admin && <AdminMenu admin={admin} />}
+            {admin && (
+              <AdminMenu
+                admin={admin}
+                notifi={notifi}
+              />
+            )}
             {currentUser && <UserMenu currentUser={currentUser} />}
             {!currentUser && !admin && (
               <button

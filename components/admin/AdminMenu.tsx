@@ -4,22 +4,36 @@ import { SafeAdmin } from "@/types";
 import { Menu, Transition } from "@headlessui/react";
 import { signOut } from "next-auth/react";
 import { Fragment } from "react";
-import Notifications from "../shared/Notifications";
 import Avatar from "../shared/Avatar";
+import React, { useEffect, useState } from "react";
+import AdminNotifications from "./AdminNotifications";
+import useData from "@/hooks/useData";
+import { AiOutlineMenu } from "react-icons/ai";
+import { Skeleton } from "../ui/skeleton";
+import { Admin, Notification } from "@prisma/client";
 
 interface AdminMenuProps {
   admin: SafeAdmin | null;
+  notifi:
+    | (Admin & {
+        notifi: Notification[];
+      })
+    | null;
 }
 
-const AdminMenu: React.FC<AdminMenuProps> = ({ admin }) => {
+const AdminMenu: React.FC<AdminMenuProps> = ({ admin, notifi }) => {
   return (
     <Menu
       as="div"
       className="relative inline-block text-left"
     >
       <div className="flex flex-row gap-x-1">
-        <Menu.Button className="p-1 md:p-2 border-[1px] border-neutral-200 flex flex-row items-center rounded-full cursor-pointer hover:shadow-md transition relative">
-          <Avatar src={admin?.image} />
+        <AdminNotifications notifi={notifi} />
+        <Menu.Button className="p-3 md:py-1 md:px-2 border-[1px] border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition relative">
+          <AiOutlineMenu size={20} />
+          <div className="hidden md:block">
+            <Avatar src={admin?.image} />
+          </div>
         </Menu.Button>
       </div>
       <Transition

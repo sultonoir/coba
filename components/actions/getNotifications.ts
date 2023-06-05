@@ -1,40 +1,34 @@
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import prisma from "@/libs/prisma";
 
-interface IParams {
-  listingId?: string;
-  userId?: string;
-  authorId?: string;
+export async function getSession() {
+  return await getServerSession(authOptions);
 }
-export default async function getNotifications(params: IParams) {
-  const { listingId, userId, authorId } = params;
-  const query: any = {};
 
-  if (listingId) {
-    query.listingId = listingId;
-  }
-
-  if (userId) {
-    query.userId = userId;
-  }
-
-  if (authorId) {
-    query.listing = { adminId: authorId };
-  }
-
+export default async function getNotifications() {
   try {
-    const notifications = await prisma.notification.findMany({
-      where: query,
-      orderBy: {
-        createdAt: "desc",
+    const session = await getSession();
+
+    if (!session?.user?.email) {
+      return null;
+    }
+
+    const currentUser = await prisma.admin.findUnique({
+      where: {
+        email: session.user.email as string,
+      },
+      include: {
+        notifi: true,
       },
     });
 
-    const safenotifications = notifications.map((notif) => ({
-      ...notif,
-      createdAt: notif.createdAt.toISOString(),
-    }));
-    return safenotifications;
-  } catch (error) {
-    throw new Error();
+    if (!currentUser) {
+      return null;
+    }
+
+    return currentUser;
+  } catch (error: any) {
+    return null;
   }
 }

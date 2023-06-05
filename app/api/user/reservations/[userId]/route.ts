@@ -2,37 +2,24 @@ import prisma from "@/libs/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 interface IParams {
-  adminId: string;
+  userId: string;
 }
 export const GET = async (
   req: NextRequest,
   { params }: { params: IParams }
 ) => {
-  const { adminId } = params;
+  const { userId } = params;
 
-  if (!adminId || typeof adminId !== "string") {
+  if (!userId || typeof userId !== "string") {
     throw new Error("Invalid ID");
   }
-
-  if (adminId) {
-    await prisma.admin.update({
-      where: {
-        id: adminId,
-      },
-      data: {
-        notification: false,
-      },
-    });
-  }
-
   try {
-    const reservations = await prisma.notification.findMany({
+    const reservations = await prisma.reservation.findMany({
       where: {
-        adminId,
+        userId,
       },
       include: {
         listing: true,
-        reservation: true,
       },
     });
     return NextResponse.json(reservations);

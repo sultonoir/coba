@@ -108,7 +108,6 @@ const EditListingModal = ({
 
   const img = watch("img");
   const fasilitas = watch("fasilitas");
-  const additional = watch("additional");
   const imagePromo = watch("imagePromo");
 
   let bodyContent = (

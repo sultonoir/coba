@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import prisma from "@/libs/prisma";
 import getCurrentUser from "@/components/actions/getCurrentUser";
+import { pusherServer } from "@/libs/pusher";
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -47,7 +48,7 @@ export async function POST(request: Request) {
 export const PUT = async (request: Request) => {
   try {
     const currentUser = await getCurrentUser();
-    if (!currentUser) {
+    if (!currentUser || !currentUser.adminId) {
       return NextResponse.error();
     }
     const { status, reservationId } = await request.json();
@@ -56,7 +57,7 @@ export const PUT = async (request: Request) => {
       return NextResponse.json({ message: "Tidak ada status" });
     }
 
-    await prisma.reservation.update({
+    const reservation = await prisma.reservation.update({
       where: {
         id: reservationId,
       },
@@ -71,6 +72,7 @@ export const PUT = async (request: Request) => {
                 guestImage: currentUser.image,
                 adminId: currentUser.adminId,
                 reservationId: reservationId,
+                userId: currentUser.id,
               },
             },
             admin: {
@@ -81,9 +83,23 @@ export const PUT = async (request: Request) => {
           },
         },
       },
+      include: {
+        admin: true,
+        notifi: true,
+      },
     });
 
-    return NextResponse.json({ message: "success" });
+    const notifications = await prisma.admin.findUnique({
+      where: {
+        id: currentUser.adminId,
+      },
+      include: {
+        notifi: true,
+      },
+    });
+
+    pusherServer.trigger("get", "newreservation", notifications);
+    return NextResponse.json(reservation);
   } catch (err: any) {
     return NextResponse.error();
   }

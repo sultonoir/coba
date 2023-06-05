@@ -16,6 +16,7 @@ import ButtonConfirm from "../shared/ButtonConfrim";
 import { Playfair_Display } from "next/font/google";
 import { IoBedOutline } from "react-icons/io5";
 import EditListingModal from "../modal/EditListingModal";
+import RatingsModal from "../modal/RatingsModal";
 export const play = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-play",
@@ -109,39 +110,11 @@ const ListingCard: React.FC<ListingCardProps> = ({
       });
   }, [reservation?.totalPrice, reservation?.listing.title]);
 
-  const ratingModal = useRatingsModal();
-  const onCompByHost = useCallback(() => {
-    setIsLoading(true);
-    axios
-      .put("api/reservations", {
-        status: "completedByhost",
-        reservationId: reservation?.id,
-      })
-      .then((e) => {
-        toast.success("reservations selesai");
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [reservation?.status]);
-
-  const onCompleted = useCallback(() => {
-    if (reservation?.status === "Complete") {
-      ratingModal.onOpen();
-    }
-  }, [reservation?.status]);
-
-  const labelCompletd = useMemo(() => {
-    if (reservation?.status === "Complete") {
-      return "Give ratings";
-    }
-  }, [reservation?.status]);
-
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editListingId, setEditListingId] = useState("");
+  const [ratingModalid, setRatingModalid] = useState<any>();
+  const [ratingModal, setratingModal] = useState(false);
+
   const openEditModal = (listingId: string) => {
     setEditListingId(listingId);
     setEditModalVisible(true);
@@ -150,6 +123,28 @@ const ListingCard: React.FC<ListingCardProps> = ({
   const handleEditClick = () => {
     openEditModal(data.id);
   };
+
+  // ratingsmodal
+  const openRatingModal = (id: string | undefined) => {
+    setRatingModalid(id);
+    setratingModal(true);
+  };
+
+  const handleRatingModals = () => {
+    openRatingModal(reservation?.id);
+  };
+
+  const onCompleted = useCallback(() => {
+    if (reservation?.status === "Complete") {
+      handleRatingModals();
+    }
+  }, [reservation?.status]);
+
+  const labelCompletd = useMemo(() => {
+    if (reservation?.status === "Complete") {
+      return "Give ratings";
+    }
+  }, [reservation?.status]);
   return (
     <div className="sm:col-span-4 xl:col-span-2 group relative shadow-sm border rounded-xl overflow-hidden">
       <EditListingModal
@@ -157,6 +152,11 @@ const ListingCard: React.FC<ListingCardProps> = ({
         editModalVisible={editModalVisible}
         editListingId={editListingId}
         onClose={() => setEditModalVisible(false)}
+      />
+      <RatingsModal
+        ratingModalid={ratingModalid}
+        ratingModal={ratingModal}
+        onClose={() => setratingModal(false)}
       />
       <div className="flex flex-col gap-3 w-full">
         <div
@@ -229,13 +229,13 @@ const ListingCard: React.FC<ListingCardProps> = ({
         </div>
       </div>
       <div className="flex flex-col gap-y-2 px-2 py-1">
+        <Link
+          href={`listings/${data.id}`}
+          className="border-rose-500 border px-2 py-1 rounded-lg hover:bg-rose-500 hover:text-white hover:underline w-full text-center"
+        >
+          Details
+        </Link>
         <div className="flex gap-2">
-          <Link
-            href={`listings/${data.id}`}
-            className="border-rose-500 border px-2 py-1 rounded-lg hover:bg-rose-500 hover:text-white hover:underline w-full text-center"
-          >
-            Details
-          </Link>
           {edit && (
             <Button
               onClick={handleEditClick}
@@ -252,18 +252,16 @@ const ListingCard: React.FC<ListingCardProps> = ({
               onClick={handleCancel}
             />
           )}
-        </div>
-        {payment && (
-          <div className="mt-2">
+          {payment && (
             <ButtonConfirm
               onClick={onCreateReservation}
               small
-              label="bayar"
+              label="Pay"
               disabled={isLoading}
               confirm
             />
-          </div>
-        )}
+          )}
+        </div>
         {completed && (
           <div className="mt-2">
             <ButtonConfirm
@@ -271,17 +269,6 @@ const ListingCard: React.FC<ListingCardProps> = ({
               onClick={onCompleted}
               small
               label={labelCompletd}
-            />
-          </div>
-        )}
-        {host && (
-          <div className="mt-2">
-            <ButtonConfirm
-              confirm
-              onClick={onCompByHost}
-              small
-              label="Selesaika reservasi"
-              disabled={isLoading}
             />
           </div>
         )}

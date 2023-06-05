@@ -30,6 +30,7 @@
     "class-variance-authority": "^0.6.0",
     "clsx": "^1.2.1",
     "date-fns": "^2.29.3",
+    "js-cookie": "^3.0.5",
     "leaflet": "^1.9.3",
     "lucide-react": "^0.224.0",
     "micro": "^10.0.1",
@@ -64,6 +65,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
+    "@types/js-cookie": "^3.0.3",
     "@types/leaflet": "^1.9.3",
     "@types/react-date-range": "^1.4.4",
     "autoprefixer": "^10.4.14",

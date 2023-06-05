@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import TextArea from "../inputs/TextArea";
 import Counter from "../inputs/Counter";
@@ -7,11 +7,15 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Modal from "./Modal";
-import useRatingsModal from "@/hooks/useRatings";
 import CountrySelect from "../inputs/CountrySelect";
+type Props = {
+  ratingModalid: string;
+  ratingModal: boolean;
+  onClose: () => void;
+};
 
-const RatingsModal = () => {
-  const ratingModal = useRatingsModal();
+const RatingsModal = ({ ratingModalid, ratingModal, onClose }: Props) => {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const {
     register,
@@ -24,6 +28,7 @@ const RatingsModal = () => {
     defaultValues: {
       value: 1,
       type: null,
+      reservationId: ratingModalid,
     },
   });
 
@@ -38,13 +43,18 @@ const RatingsModal = () => {
     });
   };
 
+  useEffect(() => {
+    setValue("reservationId", ratingModalid);
+  }, [ratingModalid, setValue]);
+
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
     axios
       .post("/api/ratings", data)
       .then(() => {
         toast.success("ratings dibuat");
-        ratingModal.onClose();
+        router.refresh();
+        onClose();
         reset();
       })
       .catch((errors) => {
@@ -80,8 +90,8 @@ const RatingsModal = () => {
   return (
     <Modal
       onSubmit={handleSubmit(onSubmit)}
-      onClose={ratingModal.onClose}
-      isOpen={ratingModal.isOpen}
+      isOpen={ratingModal}
+      onClose={onClose}
       actionLabel="Submit"
       disabled={isLoading}
       body={body}

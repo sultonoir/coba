@@ -31,7 +31,6 @@ const page = async ({ params }: { params: Iparams }) => {
     <ListingClient
       listing={listing}
       currentUser={currentUser}
-      reservations={reservations}
       admin={admin}
     />
   );

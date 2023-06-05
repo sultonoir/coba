@@ -19,7 +19,6 @@ const TripsClient: React.FC<TripsClientProps> = ({
   complete,
   completed,
 }) => {
-  console.log(complete);
   return (
     <Container>
       <Heading

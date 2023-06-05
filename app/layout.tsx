@@ -10,8 +10,8 @@ import getAdmin from "@/components/actions/getAdmin";
 import SearchModal from "@/components/modal/SearchModal";
 import HeroModal from "@/components/modal/HeroModal";
 import ReservationModal from "@/components/modal/ReservationModal";
-import RatingsModal from "@/components/modal/RatingsModal";
 import getListingAdmin from "@/components/actions/getlListingsAdmin";
+import getNotifications from "@/components/actions/getNotifications";
 
 const inter = Plus_Jakarta_Sans({ subsets: ["latin"] });
 
@@ -28,6 +28,7 @@ export default async function RootLayout({
   const currentUser = await getCurrentUser();
   const admin = await getAdmin();
   const listings = await getListingAdmin({ adminId: admin?.id });
+  const notifi = await getNotifications();
   return (
     <html lang="en">
       <link
@@ -36,7 +37,6 @@ export default async function RootLayout({
         href="/logo.svg"
       />
       <body className={inter.className}>
-        <RatingsModal />
         <SearchModal />
         <RegisterModal />
         <LoginModal />
@@ -45,6 +45,7 @@ export default async function RootLayout({
         <Navbar
           currentUser={currentUser}
           admin={admin}
+          notifi={notifi}
         />
         <ReservationModal listings={listings} />
         <ToasterProvider />

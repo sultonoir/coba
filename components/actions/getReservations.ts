@@ -1,5 +1,4 @@
 import prisma from "@/libs/prisma";
-import { pusherServer } from "@/libs/pusher";
 
 interface IParams {
   listingId?: string;
@@ -58,11 +57,6 @@ export default async function getReservations(params: IParams) {
         createdAt: reservation.listing.createdAt.toISOString(),
       },
     }));
-    await pusherServer.trigger(
-      "reservationId",
-      "reservation:new",
-      safeReservations
-    );
     return safeReservations;
   } catch (error: any) {
     throw new Error(error);
