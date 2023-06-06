@@ -28,7 +28,6 @@ export default async function RootLayout({
   const currentUser = await getCurrentUser();
   const admin = await getAdmin();
   const listings = await getListingAdmin({ adminId: admin?.id });
-  const notifi = await getNotifications();
   return (
     <html lang="en">
       <link
@@ -45,7 +44,6 @@ export default async function RootLayout({
         <Navbar
           currentUser={currentUser}
           admin={admin}
-          notifi={notifi}
         />
         <ReservationModal listings={listings} />
         <ToasterProvider />

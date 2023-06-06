@@ -31,12 +31,31 @@ export type SafeUser = Omit<
   createdAt: string;
   updatedAt: string;
 };
+
+export type SafeUserNotif = Omit<
+  User,
+  "createdAt" | "updatedAt" | "emailVerified"
+> & {
+  createdAt: string;
+  updatedAt: string;
+  notifi: Notification[];
+};
+
 export type SafeAdmin = Omit<
   Admin,
   "createdAt" | "updatedAt" | "emailVerified"
 > & {
   createdAt: string;
   updatedAt: string;
+};
+
+export type SafeAdminNotif = Omit<
+  Admin,
+  "createdAt" | "updatedAt" | "emailVerified"
+> & {
+  createdAt: string;
+  updatedAt: string;
+  notifi: Notification[];
 };
 
 export interface NavItem {

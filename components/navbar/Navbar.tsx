@@ -3,7 +3,13 @@ import React from "react";
 import Container from "../shared/Container";
 import Logo from "./Logo";
 import UserMenu from "./UserMenu";
-import { SafeAdmin, SafeNotifications, SafeUser } from "@/types";
+import {
+  SafeAdmin,
+  SafeAdminNotif,
+  SafeNotifications,
+  SafeUser,
+  SafeUserNotif,
+} from "@/types";
 import AdminMenu from "../admin/AdminMenu";
 import { Navlink } from "../admin/Navlink";
 import { NavItem } from "@/types";
@@ -13,16 +19,11 @@ import useData from "@/hooks/useData";
 import { Admin, Notification } from "@prisma/client";
 
 interface navbarProps {
-  currentUser: SafeUser | null;
-  admin: SafeAdmin | null;
-  notifi:
-    | (Admin & {
-        notifi: Notification[];
-      })
-    | null;
+  currentUser: SafeUserNotif | null;
+  admin: SafeAdminNotif | null;
 }
 
-const navbar: React.FC<navbarProps> = ({ currentUser, admin, notifi }) => {
+const navbar: React.FC<navbarProps> = ({ currentUser, admin }) => {
   const loginModal = useLoginModal();
   return (
     <div className="fixed w-full bg-white z-50 shadow-sm">
@@ -35,12 +36,7 @@ const navbar: React.FC<navbarProps> = ({ currentUser, admin, notifi }) => {
               {admin && <Navlink items={adminNav} />}
               {!currentUser && !admin && <Navlink items={NavItem} />}
             </span>
-            {admin && (
-              <AdminMenu
-                admin={admin}
-                notifi={notifi}
-              />
-            )}
+            {admin && <AdminMenu admin={admin} />}
             {currentUser && <UserMenu currentUser={currentUser} />}
             {!currentUser && !admin && (
               <button

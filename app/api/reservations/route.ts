@@ -65,18 +65,16 @@ export const PUT = async (request: Request) => {
         status,
         listing: {
           update: {
-            notifi: {
-              create: {
-                message: "Mereservasi",
-                guestName: currentUser.name,
-                guestImage: currentUser.image,
-                adminId: currentUser.adminId,
-                reservationId: reservationId,
-                userId: currentUser.id,
-              },
-            },
             admin: {
               update: {
+                notifi: {
+                  create: {
+                    message: "Mereservasi",
+                    guestName: currentUser.name,
+                    guestImage: currentUser.image,
+                    reservationId: reservationId,
+                  },
+                },
                 notification: true,
               },
             },

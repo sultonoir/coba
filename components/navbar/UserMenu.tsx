@@ -1,24 +1,22 @@
 "use client";
 
-import { SafeUser } from "@/types";
+import { SafeUserNotif } from "@/types";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { SlLogout } from "react-icons/sl";
-import { BsBookmarkHeart } from "react-icons/bs";
 import useRegisterModal from "@/hooks/useRegisterModal";
 import useLoginModal from "@/hooks/useLoginModal";
 import { AiOutlineMenu } from "react-icons/ai";
 import Avatar from "../shared/Avatar";
-import { BiUser } from "react-icons/bi";
 import { MdOutlinePayments } from "react-icons/md";
-import { RiCalendarCheckLine } from "react-icons/ri";
 import Notifications from "../shared/Notifications";
-import { HiOutlinePaperAirplane } from "react-icons/hi2";
+import { GoHistory } from "react-icons/go";
+import { VscSettings } from "react-icons/vsc";
 
 interface UserMenuProps {
-  currentUser: SafeUser | null;
+  currentUser: SafeUserNotif | null;
 }
 
 const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
@@ -76,59 +74,27 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
                         active ? "bg-rose-500 text-white" : "text-primary"
                       } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                     >
-                      <RiCalendarCheckLine
+                      <GoHistory
                         size={24}
                         className="pr-2"
                       />
-                      Reservations
+                      History
                     </button>
                   )}
                 </Menu.Item>
                 <Menu.Item>
                   {({ active }) => (
                     <button
-                      onClick={() => router.push(`/trips`)}
+                      onClick={() => router.push(`/settings`)}
                       className={`${
                         active ? "bg-rose-500 text-white" : "text-primary"
                       } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                     >
-                      <HiOutlinePaperAirplane
+                      <VscSettings
                         size={24}
                         className="pr-2"
                       />
-                      Perjalanan
-                    </button>
-                  )}
-                </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      onClick={() => router.push(`/user/${currentUser.name}`)}
-                      className={`${
-                        active ? "bg-rose-500 text-white" : "text-primary"
-                      } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                    >
-                      <BiUser
-                        size={24}
-                        className="pr-2"
-                      />
-                      Account
-                    </button>
-                  )}
-                </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      onClick={() => router.push("/favorites")}
-                      className={`${
-                        active ? "bg-rose-500 text-white" : "text-primary"
-                      } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                    >
-                      <BsBookmarkHeart
-                        size={24}
-                        className="pr-2"
-                      />
-                      Favorite
+                      Settings
                     </button>
                   )}
                 </Menu.Item>

@@ -1,33 +1,72 @@
-import { SafeNotifications, SafeUser } from "@/types";
+import { SafeUserNotif } from "@/types";
 import { Menu, Transition } from "@headlessui/react";
 import Image from "next/image";
 import Link from "next/link";
-import { Fragment } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { RxBell } from "react-icons/rx";
 import { GoPrimitiveDot } from "react-icons/go";
-import useData from "@/hooks/useData";
 import { Skeleton } from "../ui/skeleton";
+import { pusherClient } from "@/libs/pusher";
+import axios from "axios";
+import { toast } from "react-hot-toast";
+import { Notification } from "@prisma/client";
 
 interface NotificationsProps {
-  currentUser: SafeUser | null;
+  currentUser: SafeUserNotif | null;
 }
 
 export default function Notifications({ currentUser }: NotificationsProps) {
-  const { data, isLoading, error } = useData(`api/admin/${currentUser?.id}`);
+  const [data, setData] = useState(currentUser);
+  const [isloading, setIsloading] = useState(false);
 
-  if (isLoading) {
-    return <Skeleton className=" rounded-full w-[45px] h-[45px]" />;
-  }
-  if (error) {
-    return null;
-  }
+  useEffect(() => {
+    pusherClient.subscribe("get");
+    pusherClient.bind("newN", (data: any) => {
+      setData(data);
+    });
+    pusherClient.subscribe("getT");
+    pusherClient.bind("true", (data: any) => {
+      setData(data);
+    });
+
+    return () => {
+      pusherClient.unsubscribe("get");
+      pusherClient.unbind("newN", (data: any) => {
+        setData(data);
+      });
+      pusherClient.unsubscribe("getT");
+      pusherClient.unbind("true", (data: any) => {
+        setData(data);
+      });
+    };
+  }, []);
+
+  const onGet = () => {
+    setIsloading(true);
+    axios
+      .post(`/api/user`, {
+        notification: false,
+        userId: data?.id,
+      })
+      .then(() => {})
+      .catch((error) => {
+        toast.error(error.message);
+      })
+      .finally(() => {
+        setIsloading(false);
+      });
+  };
+
   return (
     <Menu
       as="div"
       className="relative inline-block text-left"
     >
       <div>
-        <Menu.Button className="p-3 border border-neutral-200 hover:shadow-md transition cursor-pointer rounded-full">
+        <Menu.Button
+          onClick={onGet}
+          className="p-3 border border-neutral-200 hover:shadow-md transition cursor-pointer rounded-full"
+        >
           <span className="relative">
             <RxBell
               size={20}
@@ -50,64 +89,67 @@ export default function Notifications({ currentUser }: NotificationsProps) {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none h-52 overflow-y-auto">
           <div className="px-1 py-1 ">
-            <Menu.Item>
-              {({ active }) => {
-                const { data, isLoading, error } = useData(
-                  `api/user/notifications/${currentUser?.id}`
-                );
-                if (isLoading) {
-                  return (
-                    <div className="flex items-center space-x-4">
-                      <Skeleton className="h-12 w-12 rounded-full" />
-                      <div className="space-y-2">
-                        <Skeleton className="h-4 w-[100px]" />
-                        <Skeleton className="h-4 w-[150px]" />
-                      </div>
-                    </div>
-                  );
-                }
-                if (error) {
-                  return <p>error</p>;
-                }
-                return (
-                  <div className="flex flex-col gap2">
-                    {data.length === 0 ? <p>Have no notifications</p> : null}
-
-                    {data.map((notif: any) => (
-                      <Link
-                        key={notif.id}
-                        href={"/trips"}
-                        className={`hover:bg-[#f1f5f9] hover:text-white group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                      >
-                        <div className="flex flex-row gap-2">
-                          <div className="w-[40px] h-10 relative">
-                            <Image
-                              alt="Avatar"
-                              fill
-                              sizes="100%"
-                              style={{ objectFit: "cover" }}
-                              quality={100}
-                              src={notif.guestImage || `/placeholder.jpg`}
-                              className="rounded-full aspect-square"
-                            />
-                          </div>
-                          <div className="flex w-[150px] flex-col gap-1">
-                            <p className="font-semibold text-neutral-800 ">
-                              {notif.guestName}
-                            </p>
-                            <p className="font-semibold text-neutral-800 ">
-                              {notif.message}
-                            </p>
-                          </div>
-                        </div>
-                      </Link>
-                    ))}
+            {data?.notifi?.length === 0 ? (
+              <Menu.Item>
+                {({ active }) => (
+                  <div
+                    className={`${
+                      active ? "bg-rose-500 text-white" : "text-primary"
+                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                  >
+                    Tidak ada notifikasi
                   </div>
-                );
-              }}
-            </Menu.Item>
+                )}
+              </Menu.Item>
+            ) : null}
+            {data?.notifi?.map((notif: Notification) => (
+              <Menu.Item key={notif.id}>
+                {({ active }) => {
+                  if (isloading) {
+                    return (
+                      <div className="flex items-center space-x-4">
+                        <Skeleton className="h-10 w-10 rounded-full" />
+                        <div className="space-y-3">
+                          <Skeleton className="h-4 w-[70px]" />
+                          <Skeleton className="h-4 w-[100px]" />
+                        </div>
+                      </div>
+                    );
+                  }
+                  return (
+                    <Link
+                      href={"/admin"}
+                      className={`${
+                        active ? "bg-[#f1f5f9] text-white" : "text-primary"
+                      } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                    >
+                      <div className="flex flex-row gap-2">
+                        <div className="w-10 h-10">
+                          <Image
+                            alt="Avatar"
+                            width={40}
+                            height={40}
+                            src={notif.guestImage || `/placeholder.jpg`}
+                            className="rounded-full aspect-square"
+                          />
+                        </div>
+                        <div className="flex flex-col gap-1 w-[132px]">
+                          <p className="font-semibold text-neutral-800 ">
+                            {notif.guestName}
+                          </p>
+                          <hr />
+                          <p className="font-semibold text-neutral-800 ">
+                            {notif.message}
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                }}
+              </Menu.Item>
+            ))}
           </div>
         </Menu.Items>
       </Transition>

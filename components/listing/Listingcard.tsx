@@ -145,6 +145,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
       return "Give ratings";
     }
   }, [reservation?.status]);
+
   return (
     <div className="sm:col-span-4 xl:col-span-2 group relative shadow-sm border rounded-xl overflow-hidden">
       <EditListingModal
@@ -164,7 +165,8 @@ const ListingCard: React.FC<ListingCardProps> = ({
             aspect-video
             w-full 
             relative 
-            overflow-hidden 
+            overflow-hidden
+            p-2
           "
         >
           <Swiper
@@ -186,6 +188,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
                   <BluredImage
                     src={img.name}
                     alt={data.title}
+                    border
                   />
                 </SwiperSlide>
               );
@@ -199,32 +202,32 @@ const ListingCard: React.FC<ListingCardProps> = ({
           </Swiper>
         </div>
         <div className="flex flex-row justify-between px-2">
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-3">
             <p
               className={`${play.className} text-xl font-semibold text-foreground uppercase`}
             >
               {data.title}
             </p>
+            <div className="flex flex-row gap-5 items-center">
+              <div className="flex flex-row items-center">
+                <BiUser
+                  size={20}
+                  className="text-rose-500"
+                />
+                <p className="text-neutral-500">{data.guestCount} Person</p>
+              </div>
+              <div className="flex flex-row items-center">
+                <IoBedOutline
+                  size={20}
+                  className="text-rose-500"
+                />
+                <p className="text-neutral-500">{data.bed} Bed</p>
+              </div>
+            </div>
             <div className="flex flex-row items-center gap-1">
               <p className="font-semibold">{price}</p>
               {!reservation && <p className="font-light">/ Night</p>}
             </div>
-          </div>
-        </div>
-        <div className="flex flex-row gap-5 items-center justify-evenly">
-          <div className="flex flex-row items-center justify-center">
-            <BiUser
-              size={20}
-              className="text-rose-500"
-            />
-            <p className="text-neutral-500">{data.guestCount} Person</p>
-          </div>
-          <div className="flex flex-row items-center justify-center">
-            <IoBedOutline
-              size={20}
-              className="text-rose-500"
-            />
-            <p className="text-neutral-500">{data.bed} Bed</p>
           </div>
         </div>
       </div>

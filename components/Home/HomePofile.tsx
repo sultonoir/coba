@@ -4,11 +4,26 @@ import { play } from "../listing/Listingcard";
 import Image from "next/image";
 import { Rating } from "@prisma/client";
 import Container from "../shared/Container";
+import { IoIosStar } from "react-icons/io";
 
 interface HomeProfileProps {
   ratings: Rating[];
 }
 const HomeProfile: React.FC<HomeProfileProps> = ({ ratings }) => {
+  function hitungRataRataRating(ratings: any) {
+    let totalRating = 0;
+    let jumlahData = 0;
+
+    for (let i = 0; i < ratings.length; i++) {
+      totalRating += ratings[i].value;
+      jumlahData++;
+    }
+
+    const rataRata = totalRating / jumlahData;
+    return isNaN(rataRata) ? 0 : rataRata.toFixed(1);
+  }
+
+  const rataRataRating = hitungRataRataRating(ratings);
   return (
     <Container>
       <div className="flex flex-row gap-3 relative h-[800px]">
@@ -46,7 +61,13 @@ const HomeProfile: React.FC<HomeProfileProps> = ({ ratings }) => {
             Credit Card Needed! Read Reviews from Verified Guests.
           </p>
           <div className="flex flex-row gap-2 items-center">
-            <p className={`text-3xl`}>4.5</p>
+            <div className="flex flex-row items-center gap-2">
+              <IoIosStar
+                size={30}
+                className="text-rose-500"
+              />
+              <p className={`text-3xl`}>{rataRataRating}</p>
+            </div>
             <p className="text-xl capitalize">user ratings</p>
           </div>
         </div>

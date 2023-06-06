@@ -3,14 +3,15 @@ import HomeHero from "@/components/Home/HomeHero";
 import HomeNavigations from "@/components/Home/HomeNavigations";
 import HomeProfile from "@/components/Home/HomePofile";
 import HomePromosi from "@/components/Home/HomePromosi";
+import HoomeUserFeedback from "@/components/Home/HoomeUserFeedback";
 import EmptyState from "@/components/shared/EmptyState";
 import { SafeListing } from "@/types";
-import { Hero, Rating } from "@prisma/client";
+import { Hero, Rating, User } from "@prisma/client";
 import React from "react";
 
 interface HomeClientProps {
   listings: SafeListing[];
-  ratings: Rating[];
+  ratings: (Rating & { user: User | null })[];
   promosi: Hero[];
 }
 
@@ -28,6 +29,7 @@ const HomeClient: React.FC<HomeClientProps> = ({
       <HomeProfile ratings={ratings} />
       <HomeNavigations />
       <HomePromosi promosi={promosi} />
+      <HoomeUserFeedback ratings={ratings} />
     </>
   );
 };

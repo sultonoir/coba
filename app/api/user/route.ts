@@ -5,22 +5,24 @@ import bcrypt from "bcrypt";
 
 export const POST = async (request: Request) => {
   const body = await request.json();
-  const { adminId, notification } = body;
+  const { userId, notification } = body;
 
   try {
-    const admin = await prisma.admin.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
-        id: adminId,
+        id: userId,
       },
     });
 
-    if (admin?.notification === false) {
-      return NextResponse.json(admin);
+    if (user?.notification === false) {
+      // Jika notification sudah false, kembalikan user tanpa melakukan pembaruan
+      return NextResponse.json(user);
     }
 
-    const updatedAdmin = await prisma.admin.update({
+    // Jika notification belum false, lakukan pembaruan
+    const updatedUser = await prisma.user.update({
       where: {
-        id: adminId,
+        id: userId,
       },
       data: {
         notification,
@@ -30,9 +32,9 @@ export const POST = async (request: Request) => {
       },
     });
 
-    pusherServer.trigger("getT", "true", updatedAdmin);
+    pusherServer.trigger("getT", "true", updatedUser);
 
-    return NextResponse.json(updatedAdmin);
+    return NextResponse.json(updatedUser);
   } catch (error) {
     return NextResponse.error();
   }
@@ -40,7 +42,7 @@ export const POST = async (request: Request) => {
 
 export const PUT = async (request: Request) => {
   const body = await request.json();
-  const { adminId, image, password, name, email } = body;
+  const { userId, image, password, name, email } = body;
   const dataToUpdate: any = {};
 
   if (image) {
@@ -60,13 +62,13 @@ export const PUT = async (request: Request) => {
     dataToUpdate.hashedPassword = hashedPassword;
   }
   try {
-    const admin = await prisma.admin.update({
+    const user = await prisma.user.update({
       where: {
-        id: adminId,
+        id: userId,
       },
       data: dataToUpdate,
     });
-    return NextResponse.json(admin);
+    return NextResponse.json(user);
   } catch (error) {
     return NextResponse.error();
   }

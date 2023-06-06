@@ -1,26 +1,21 @@
-import { SafeAdmin, SafeNotifications } from "@/types";
 import { Menu, Transition } from "@headlessui/react";
 import Image from "next/image";
 import Link from "next/link";
 import { GoPrimitiveDot } from "react-icons/go";
 import { RxBell } from "react-icons/rx";
 import { Fragment, useEffect, useState } from "react";
-import useData from "@/hooks/useData";
 import { Skeleton } from "../ui/skeleton";
 import { pusherClient } from "@/libs/pusher";
-import { Admin, Notification } from "@prisma/client";
+import { Notification } from "@prisma/client";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import { SafeAdminNotif } from "@/types";
 
 interface AdminNotificationsProps {
-  notifi:
-    | (Admin & {
-        notifi: Notification[];
-      })
-    | null;
+  admin: SafeAdminNotif | null;
 }
-const AdminNotifications: React.FC<AdminNotificationsProps> = ({ notifi }) => {
-  const [data, setData] = useState(notifi);
+const AdminNotifications: React.FC<AdminNotificationsProps> = ({ admin }) => {
+  const [data, setData] = useState(admin);
   const [isloading, setIsloading] = useState(false);
   useEffect(() => {
     pusherClient.subscribe("get");
@@ -44,7 +39,7 @@ const AdminNotifications: React.FC<AdminNotificationsProps> = ({ notifi }) => {
       pusherClient.unbind("newratings", function (data: any) {
         setData(data);
       });
-      pusherClient.unsubscribe("T");
+      pusherClient.unsubscribe("");
       pusherClient.unbind("true", function (data: any) {
         setData(data);
       });
@@ -101,16 +96,7 @@ const AdminNotifications: React.FC<AdminNotificationsProps> = ({ notifi }) => {
       >
         <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none h-52 overflow-y-auto">
           <div className="px-1 py-1 ">
-            {isloading ? (
-              <div className="flex items-center space-x-4">
-                <Skeleton className="h-12 w-10 rounded-full" />
-                <div className="space-y-2">
-                  <Skeleton className="h-4 w-[70px]" />
-                  <Skeleton className="h-4 w-[80px]" />
-                </div>
-              </div>
-            ) : null}
-            {data?.notifi.length === 0 && (
+            {data?.notifi?.length === 0 ? (
               <Menu.Item>
                 {({ active }) => (
                   <div
@@ -122,10 +108,21 @@ const AdminNotifications: React.FC<AdminNotificationsProps> = ({ notifi }) => {
                   </div>
                 )}
               </Menu.Item>
-            )}
-            {data?.notifi.map((notif: Notification) => (
+            ) : null}
+            {data?.notifi?.map((notif: Notification) => (
               <Menu.Item key={notif.id}>
                 {({ active }) => {
+                  if (isloading) {
+                    return (
+                      <div className="flex items-center space-x-4">
+                        <Skeleton className="h-10 w-10 rounded-full" />
+                        <div className="space-y-3">
+                          <Skeleton className="h-4 w-[70px]" />
+                          <Skeleton className="h-4 w-[100px]" />
+                        </div>
+                      </div>
+                    );
+                  }
                   return (
                     <Link
                       href={"/admin"}

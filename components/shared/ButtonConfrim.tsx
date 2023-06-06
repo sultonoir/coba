@@ -37,7 +37,7 @@ const ButtonConfirm = ({
         }
         ${
           small
-            ? "py-1 text-sm font-light border-[1px]"
+            ? "py-2 text-sm font-light border-[1px]"
             : "py-3 text-base font-semibold border-[2px]"
         }
         `}

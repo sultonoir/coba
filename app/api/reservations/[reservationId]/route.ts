@@ -99,7 +99,16 @@ export async function PUT(request: Request, { params }: { params: IParams }) {
       data: update,
     });
 
-    await pusherServer.trigger(reservationId, "reservation:new", reservation);
+    const notification = await prisma.user.findMany({
+      where: {
+        id: userId,
+      },
+      include: {
+        notifi: true,
+      },
+    });
+
+    await pusherServer.trigger("get", "newN", notification);
     return NextResponse.json(reservation);
   } catch (error) {
     return NextResponse.error();

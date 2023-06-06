@@ -7,7 +7,7 @@ import Container from "../shared/Container";
 
 const HomeNavigations = () => {
   return (
-    <div className="p-5 pb-20 bg-neutral-400">
+    <div className="p-5 pb-20 bg-[#F5F5F5]">
       <Container>
         <h1
           className={`${play.className} text-center text-5xl font-bold capitalize mb-5`}

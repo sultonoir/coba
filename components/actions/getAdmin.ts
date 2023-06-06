@@ -18,6 +18,9 @@ export default async function getAdmin() {
       where: {
         email: session.user.email as string,
       },
+      include: {
+        notifi: true,
+      },
     });
 
     if (!currentUser) {
