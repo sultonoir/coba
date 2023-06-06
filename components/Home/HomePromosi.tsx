@@ -4,6 +4,7 @@ import Image from "next/image";
 import React from "react";
 import { play } from "../listing/Listingcard";
 import Container from "../shared/Container";
+import { motion } from "framer-motion";
 interface HomePromosiProps {
   promosi: Hero[];
 }
@@ -11,7 +12,17 @@ interface HomePromosiProps {
 const HomePromosi: React.FC<HomePromosiProps> = ({ promosi }) => {
   return (
     <Container>
-      <div className="h-[500px] mt-10">
+      <motion.div
+        className="mt-10"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.5 }}
+        transition={{ duration: 0.5 }}
+        variants={{
+          hidden: { opacity: 0, y: 50 },
+          visible: { opacity: 1, y: 0 },
+        }}
+      >
         <h1
           className={`${play.className} text-5xl font-bold text-center capitalize`}
         >
@@ -31,7 +42,7 @@ const HomePromosi: React.FC<HomePromosiProps> = ({ promosi }) => {
                   style={{ objectFit: "cover" }}
                   quality={100}
                   sizes="100%"
-                  className="group-hover:scale-110 transition"
+                  className="duration-700 ease-in-out group-hover:scale-110"
                 />
                 <p className="z-10 absolute w-full bottom-5 text-xl text-white text-center">
                   {promo.name}
@@ -40,7 +51,7 @@ const HomePromosi: React.FC<HomePromosiProps> = ({ promosi }) => {
             </div>
           ))}
         </div>
-      </div>
+      </motion.div>
     </Container>
   );
 };

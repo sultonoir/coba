@@ -22,3 +22,18 @@ export async function POST(request: Request) {
     return NextResponse.error();
   }
 }
+
+export const PUT = async (request: Request) => {
+  const body = await request.json();
+  const { id } = body;
+  try {
+    const promosi = await prisma.hero.delete({
+      where: {
+        id,
+      },
+    });
+    return NextResponse.json(promosi);
+  } catch (error) {
+    return NextResponse.error();
+  }
+};

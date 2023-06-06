@@ -83,6 +83,22 @@ const ListingCard: React.FC<ListingCardProps> = ({
     return formattedPrice;
   }, [reservation, data.price]);
 
+  const priceDiscount = useMemo(() => {
+    const formatter = new Intl.NumberFormat("us-US", {
+      style: "currency",
+      currency: "USD",
+    });
+
+    if (data.discount) {
+      const discount = data.price * (data.discount / 100); //
+      const price = data.price - discount;
+      const formattedPrice = formatter.format(price);
+      return formattedPrice;
+    }
+
+    return formatter.format(data.price); // Mengembalikan harga tanpa diskon jika tidak ada diskon
+  }, [data.discount, data.price]);
+
   const [isLoading, setIsLoading] = useState(false);
 
   const onCreateReservation = useCallback(() => {
@@ -224,10 +240,20 @@ const ListingCard: React.FC<ListingCardProps> = ({
                 <p className="text-neutral-500">{data.bed} Bed</p>
               </div>
             </div>
-            <div className="flex flex-row items-center gap-1">
-              <p className="font-semibold">{price}</p>
-              {!reservation && <p className="font-light">/ Night</p>}
-            </div>
+            {data.discount ? (
+              <div className="flex flex-row items-center gap-1">
+                <div className="flex flex-row items-center gap-1 line-through text-neutral-500">
+                  <p className="font-semibold">{price}</p>
+                </div>
+                <p className="font-semibold">{priceDiscount}</p>
+                <p className="font-light">/ Night</p>
+              </div>
+            ) : (
+              <div className="flex flex-row items-center gap-1">
+                <p className="font-semibold">{price}</p>
+                <p className="font-light">/ Night</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

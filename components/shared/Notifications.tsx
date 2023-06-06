@@ -73,7 +73,7 @@ export default function Notifications({ currentUser }: NotificationsProps) {
               aria-hidden="true"
             />
             {data?.notification && (
-              <span className="animate-pulse absolute top-0 right-0 text-rose-500">
+              <span className="animate-pulse absolute -top-1 -right-1 text-rose-500">
                 <GoPrimitiveDot size={20} />
               </span>
             )}

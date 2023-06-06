@@ -15,6 +15,11 @@ import sky from "@/public/sky.jpg";
 import gym from "@/public/gym.jpg";
 import cafe from "@/public/cafe.jpg";
 import { Clock } from "lucide-react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "facility",
+};
 
 const facility = [
   {

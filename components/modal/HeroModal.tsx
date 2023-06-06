@@ -82,6 +82,7 @@ const HeroModal = () => {
       actionLabel="Submit"
       body={body}
       disabled={isLoading}
+      title="poster"
     />
   );
 };

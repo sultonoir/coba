@@ -14,6 +14,7 @@ export async function generateMetadata({ params }: { params: Iparams }) {
   const user = await getLIstingById(params);
   return {
     title: user?.title,
+    description: user?.description,
   };
 }
 

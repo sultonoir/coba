@@ -54,11 +54,18 @@ const HomeProfile: React.FC<HomeProfileProps> = ({ ratings }) => {
             Welcome to our
           </h1>
           <p className={`${play.className} text-5xl text-rose-500`}>
-            KyOuka Hotels
+            KyOuka Hotel
           </p>
-          <p className="text-xl text-justify">
-            We Have Over 40 Payment Ways for Locking the Lowest Room Rates. No
-            Credit Card Needed! Read Reviews from Verified Guests.
+          <p className="text-xl text-justify indent-8">
+            Let's find an unforgettable stay at Kyouka Hotel! Enjoy unparalleled
+            luxury and comfort in an elegant setting and high-quality service.
+            With a strategic location in the city center, Kyouka Hotel is the
+            ideal choice for your business and leisure trips. With modern
+            facilities, mouth-watering restaurants and scenic views, we
+            guarantee a satisfying stay. Immediately book your room at Kyouka
+            Hotel and feel our warm hospitality and attention to every detail to
+            fulfill your needs. Welcome to the world of unrivaled luxury at
+            Kyouka Hotel!
           </p>
           <div className="flex flex-row gap-2 items-center">
             <div className="flex flex-row items-center gap-2">

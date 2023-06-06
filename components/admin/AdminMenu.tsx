@@ -1,17 +1,15 @@
 "use client";
 
-import { SafeAdmin, SafeAdminNotif } from "@/types";
+import { SafeAdminNotif } from "@/types";
 import { Menu, Transition } from "@headlessui/react";
 import { signOut } from "next-auth/react";
 import { Fragment } from "react";
 import Avatar from "../shared/Avatar";
-import React, { useEffect, useState } from "react";
 import AdminNotifications from "./AdminNotifications";
-import useData from "@/hooks/useData";
 import { AiOutlineMenu } from "react-icons/ai";
-import { Skeleton } from "../ui/skeleton";
-import { Admin, Notification } from "@prisma/client";
 import { useRouter } from "next/navigation";
+import { SearchIcon } from "lucide-react";
+import useSearchModal from "@/hooks/useSearchModal";
 
 interface AdminMenuProps {
   admin: SafeAdminNotif | null;
@@ -19,12 +17,20 @@ interface AdminMenuProps {
 
 const AdminMenu: React.FC<AdminMenuProps> = ({ admin }) => {
   const router = useRouter();
+  const searchModal = useSearchModal();
   return (
     <Menu
       as="div"
       className="relative inline-block text-left"
     >
       <div className="flex flex-row items-center gap-3">
+        <button
+          onClick={searchModal.onOpen}
+          title="Search"
+          className="sm:hidden p-3 border-[1px] border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition"
+        >
+          <SearchIcon size={20} />
+        </button>
         <AdminNotifications admin={admin} />
         <Menu.Button className="p-3 md:py-1 md:px-2 border-[1px] border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition relative">
           <AiOutlineMenu size={20} />
@@ -49,24 +55,24 @@ const AdminMenu: React.FC<AdminMenuProps> = ({ admin }) => {
                 <Menu.Item>
                   {({ active }) => (
                     <button
-                      onClick={() => signOut()}
-                      className={`${
-                        active ? "bg-rose-500 text-white" : "text-primary"
-                      } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                    >
-                      Logout
-                    </button>
-                  )}
-                </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
                       onClick={() => router.push("admin/settings")}
                       className={`${
                         active ? "bg-rose-500 text-white" : "text-primary"
                       } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                     >
                       settings
+                    </button>
+                  )}
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <button
+                      onClick={() => signOut()}
+                      className={`${
+                        active ? "bg-rose-500 text-white" : "text-primary"
+                      } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                    >
+                      Logout
                     </button>
                   )}
                 </Menu.Item>

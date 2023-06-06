@@ -14,6 +14,10 @@ import { MdOutlinePayments } from "react-icons/md";
 import Notifications from "../shared/Notifications";
 import { GoHistory } from "react-icons/go";
 import { VscSettings } from "react-icons/vsc";
+import { LucideHistory } from "lucide-react";
+import { SearchIcon } from "lucide-react";
+import { Button } from "../ui/button";
+import useSearchModal from "@/hooks/useSearchModal";
 
 interface UserMenuProps {
   currentUser: SafeUserNotif | null;
@@ -22,6 +26,7 @@ interface UserMenuProps {
 const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
   const registerModal = useRegisterModal();
   const loginModal = useLoginModal();
+  const searchModal = useSearchModal();
   const router = useRouter();
   return (
     <Menu
@@ -29,6 +34,13 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
       className="relative inline-block text-left"
     >
       <div className="flex flex-row items-center gap-3">
+        <button
+          onClick={searchModal.onOpen}
+          title="Search"
+          className="sm:hidden p-3 border-[1px] border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition"
+        >
+          <SearchIcon size={20} />
+        </button>
         {currentUser && <Notifications currentUser={currentUser} />}
         <Menu.Button className="p-3 md:py-1 md:px-2 border-[1px] border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition relative">
           <AiOutlineMenu size={20} />
@@ -69,12 +81,12 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
                 <Menu.Item>
                   {({ active }) => (
                     <button
-                      onClick={() => router.push(`/reservations`)}
+                      onClick={() => router.push(`/history`)}
                       className={`${
                         active ? "bg-rose-500 text-white" : "text-primary"
                       } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                     >
-                      <GoHistory
+                      <LucideHistory
                         size={24}
                         className="pr-2"
                       />

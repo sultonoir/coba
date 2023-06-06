@@ -63,10 +63,8 @@ export async function PUT(request: Request) {
     fasilitas,
     bed,
     listingId,
-    additional,
     discount,
   } = body;
-  const { name, cost } = additional;
   const listing = await prisma.listing.update({
     where: {
       id: listingId,

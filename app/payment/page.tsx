@@ -1,13 +1,11 @@
 import getResrvStatus from "@/components/actions/getResrvStatus";
 import getCurrentUser from "../../components/actions/getCurrentUser";
-import getReservations from "../../components/actions/getReservations";
 import EmptyState from "../../components/shared/EmptyState";
 import PaymentClient from "./PaymentClinet";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Pembayaran",
-  description: "bayar reservasi anda",
+  title: "Payment",
 };
 
 const TripsPage = async () => {
