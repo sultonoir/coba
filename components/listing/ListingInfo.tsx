@@ -53,10 +53,7 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
         </div>
       </div>
       <hr />
-      <div
-        className="
-      text-lg font-light text-neutral-500"
-      >
+      <div className="text-lg font-light text-neutral-500 text-justify indent-1">
         {description}
       </div>
       <hr />
