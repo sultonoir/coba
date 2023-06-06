@@ -52,7 +52,7 @@ const RatingsModal = ({ ratingModalid, ratingModal, onClose }: Props) => {
     axios
       .post("/api/ratings", data)
       .then(() => {
-        toast.success("ratings dibuat");
+        toast.success("ratings created");
         router.refresh();
         onClose();
         reset();

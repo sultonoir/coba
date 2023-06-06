@@ -69,7 +69,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
         rooms,
       })
       .then(() => {
-        toast.success("Berhasil mereservasi");
+        toast.success("Successful reservation");
         setDateRange(initialDateRange);
         router.push("/payment");
       })
