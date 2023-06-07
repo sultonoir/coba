@@ -28,6 +28,7 @@ const AdminClient = () => {
     title: data.listing.title,
     email: data.user?.email,
     userId: data.userId,
+    created: data.createdAt,
   }));
   return (
     <div>

@@ -27,6 +27,7 @@ export type Payment = {
   id: string;
   email: string | null | undefined;
   userId: string | null;
+  created: Date;
 };
 
 export const columns: ColumnDef<Payment>[] = [

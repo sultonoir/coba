@@ -3,20 +3,12 @@ import React from "react";
 import Container from "../shared/Container";
 import Logo from "./Logo";
 import UserMenu from "./UserMenu";
-import {
-  SafeAdmin,
-  SafeAdminNotif,
-  SafeNotifications,
-  SafeUser,
-  SafeUserNotif,
-} from "@/types";
+import { SafeAdminNotif, SafeUserNotif } from "@/types";
 import AdminMenu from "../admin/AdminMenu";
 import { Navlink } from "../admin/Navlink";
 import { NavItem } from "@/types";
 import { adminNav } from "@/types";
 import useLoginModal from "@/hooks/useLoginModal";
-import useData from "@/hooks/useData";
-import { Admin, Notification } from "@prisma/client";
 import { SearchIcon } from "lucide-react";
 import useSearchModal from "@/hooks/useSearchModal";
 
