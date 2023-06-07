@@ -64,7 +64,6 @@ const AdminNotifications: React.FC<AdminNotificationsProps> = ({ admin }) => {
     axios
       .post(`/api/admin`, {
         notification: false,
-        adminId: data?.id,
       })
       .then(() => {})
       .catch((error) => {

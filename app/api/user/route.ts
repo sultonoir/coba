@@ -2,15 +2,20 @@ import prisma from "@/libs/prisma";
 import { pusherServer } from "@/libs/pusher";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import getCurrentUser from "@/components/actions/getCurrentUser";
 
 export const POST = async (request: Request) => {
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    return NextResponse.error();
+  }
   const body = await request.json();
-  const { userId, notification } = body;
+  const { notification } = body;
 
   try {
     const user = await prisma.user.findUnique({
       where: {
-        id: userId,
+        id: currentUser.id,
       },
     });
 
@@ -22,7 +27,7 @@ export const POST = async (request: Request) => {
     // Jika notification belum false, lakukan pembaruan
     const updatedUser = await prisma.user.update({
       where: {
-        id: userId,
+        id: currentUser.id,
       },
       data: {
         notification,

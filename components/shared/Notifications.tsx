@@ -20,12 +20,6 @@ export default function Notifications({ currentUser }: NotificationsProps) {
   const [isloading, setIsloading] = useState(false);
   console.log(data);
   useEffect(() => {
-    if (!("Notification" in window)) {
-      console.log("Browser tidak mendukung notifikasi desktop");
-    } else {
-      Notification.requestPermission();
-    }
-
     const showNotification = (message: any) => {
       new Notification(message);
     };
@@ -55,7 +49,6 @@ export default function Notifications({ currentUser }: NotificationsProps) {
     axios
       .post(`/api/user`, {
         notification: false,
-        userId: data?.id,
       })
       .then(() => {})
       .catch((error) => {
@@ -129,7 +122,7 @@ export default function Notifications({ currentUser }: NotificationsProps) {
                   }
                   return (
                     <Link
-                      href={"/admin"}
+                      href={"/history"}
                       className={`${
                         active ? "bg-[#f1f5f9] text-white" : "text-primary"
                       } group flex w-full items-center rounded-md px-2 py-2 text-sm`}

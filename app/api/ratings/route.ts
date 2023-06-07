@@ -30,7 +30,6 @@ export const POST = async (req: Request) => {
           update: {
             notifi: {
               create: {
-                userId: user.id,
                 message: "Memberikan ratings",
                 guestName: user.name,
                 guestImage: user.image,

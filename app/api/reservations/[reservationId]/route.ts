@@ -99,7 +99,7 @@ export async function PUT(request: Request, { params }: { params: IParams }) {
       data: update,
     });
 
-    const notification = await prisma.user.findMany({
+    const notification = await prisma.user.findUnique({
       where: {
         id: userId,
       },

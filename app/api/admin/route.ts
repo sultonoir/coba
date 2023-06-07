@@ -2,15 +2,20 @@ import prisma from "@/libs/prisma";
 import { pusherServer } from "@/libs/pusher";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import getAdmin from "@/components/actions/getAdmin";
 
 export const POST = async (request: Request) => {
+  const admins = await getAdmin();
+  if (!admins) {
+    return NextResponse.error();
+  }
   const body = await request.json();
-  const { adminId, notification } = body;
+  const { notification } = body;
 
   try {
     const admin = await prisma.admin.findUnique({
       where: {
-        id: adminId,
+        id: admins.id,
       },
     });
 
@@ -20,7 +25,7 @@ export const POST = async (request: Request) => {
 
     const updatedAdmin = await prisma.admin.update({
       where: {
-        id: adminId,
+        id: admins.id,
       },
       data: {
         notification,
