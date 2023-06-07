@@ -6,10 +6,10 @@ import { RxBell } from "react-icons/rx";
 import { Fragment, useEffect, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { pusherClient } from "@/libs/pusher";
-import { Notification } from "@prisma/client";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { SafeAdminNotif } from "@/types";
+import { Notifi } from "@prisma/client";
 
 interface AdminNotificationsProps {
   admin: SafeAdminNotif | null;
@@ -18,31 +18,44 @@ const AdminNotifications: React.FC<AdminNotificationsProps> = ({ admin }) => {
   const [data, setData] = useState(admin);
   const [isloading, setIsloading] = useState(false);
   useEffect(() => {
+    if (!("Notification" in window)) {
+      console.log("Browser tidak mendukung notifikasi desktop");
+    } else {
+      Notification.requestPermission();
+    }
+
+    const showNotification = (message: any) => {
+      new Notification(message);
+    };
+
+    const handleNewReservation = (data: any) => {
+      setData(data);
+      showNotification("Pesan Baru: Reservasi");
+    };
+
+    const handleNewRating = (data: any) => {
+      setData(data);
+      showNotification("Pesan Baru: Rating");
+    };
+
+    const handleTrueEvent = (data: any) => {
+      setData(data);
+    };
+
     pusherClient.subscribe("get");
-    pusherClient.bind("newreservation", function (data: any) {
-      setData(data);
-    });
+    pusherClient.bind("newreservation", handleNewReservation);
     pusherClient.subscribe("getR");
-    pusherClient.bind("newratings", (data: any) => {
-      setData(data);
-    });
+    pusherClient.bind("newratings", handleNewRating);
     pusherClient.subscribe("getT");
-    pusherClient.bind("true", (data: any) => {
-      setData(data);
-    });
+    pusherClient.bind("true", handleTrueEvent);
+
     return () => {
       pusherClient.unsubscribe("get");
-      pusherClient.unbind("newreservation", function (data: any) {
-        setData(data);
-      });
+      pusherClient.unbind("newreservation", handleNewReservation);
       pusherClient.unsubscribe("getR");
-      pusherClient.unbind("newratings", function (data: any) {
-        setData(data);
-      });
-      pusherClient.unsubscribe("");
-      pusherClient.unbind("true", function (data: any) {
-        setData(data);
-      });
+      pusherClient.unbind("newratings", handleNewRating);
+      pusherClient.unsubscribe("getT");
+      pusherClient.unbind("true", handleTrueEvent);
     };
   }, []);
 
@@ -78,7 +91,7 @@ const AdminNotifications: React.FC<AdminNotificationsProps> = ({ admin }) => {
               aria-hidden="true"
             />
             {data?.notification && (
-              <span className="animate-pulse absolute top-0 right-0 text-rose-500">
+              <span className="animate-pulse absolute -top-1 -right-1 text-rose-500">
                 <GoPrimitiveDot size={20} />
               </span>
             )}
@@ -109,7 +122,7 @@ const AdminNotifications: React.FC<AdminNotificationsProps> = ({ admin }) => {
                 )}
               </Menu.Item>
             ) : null}
-            {data?.notifi?.map((notif: Notification) => (
+            {data?.notifi?.map((notif: Notifi) => (
               <Menu.Item key={notif.id}>
                 {({ active }) => {
                   if (isloading) {

@@ -9,7 +9,7 @@ import { Skeleton } from "../ui/skeleton";
 import { pusherClient } from "@/libs/pusher";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { Notification } from "@prisma/client";
+import { Notifi } from "@prisma/client";
 
 interface NotificationsProps {
   currentUser: SafeUserNotif | null;
@@ -18,26 +18,35 @@ interface NotificationsProps {
 export default function Notifications({ currentUser }: NotificationsProps) {
   const [data, setData] = useState(currentUser);
   const [isloading, setIsloading] = useState(false);
-
+  console.log(data);
   useEffect(() => {
+    if (!("Notification" in window)) {
+      console.log("Browser tidak mendukung notifikasi desktop");
+    } else {
+      Notification.requestPermission();
+    }
+
+    const showNotification = (message: any) => {
+      new Notification(message);
+    };
+
+    const handleNotifications = (data: any) => {
+      setData(data);
+      showNotification("New message");
+    };
+    const handleTrue = (data: any) => {
+      setData(data);
+    };
     pusherClient.subscribe("get");
-    pusherClient.bind("newN", (data: any) => {
-      setData(data);
-    });
+    pusherClient.bind("newN", handleNotifications);
     pusherClient.subscribe("getT");
-    pusherClient.bind("true", (data: any) => {
-      setData(data);
-    });
+    pusherClient.bind("true", handleTrue);
 
     return () => {
       pusherClient.unsubscribe("get");
-      pusherClient.unbind("newN", (data: any) => {
-        setData(data);
-      });
+      pusherClient.unbind("newN", handleNotifications);
       pusherClient.unsubscribe("getT");
-      pusherClient.unbind("true", (data: any) => {
-        setData(data);
-      });
+      pusherClient.unbind("true", handleTrue);
     };
   }, []);
 
@@ -104,7 +113,7 @@ export default function Notifications({ currentUser }: NotificationsProps) {
                 )}
               </Menu.Item>
             ) : null}
-            {data?.notifi?.map((notif: Notification) => (
+            {data?.notifi?.map((notif: Notifi) => (
               <Menu.Item key={notif.id}>
                 {({ active }) => {
                   if (isloading) {

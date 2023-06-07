@@ -20,7 +20,7 @@ const Counter = ({ title, subtitle, value, onChange, max }: Props) => {
   }, [onChange, value]);
 
   const onReduce = useCallback(() => {
-    if (value === 0) {
+    if (value === 1) {
       return;
     }
     onChange(value - 1);

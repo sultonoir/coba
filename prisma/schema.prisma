@@ -20,7 +20,7 @@ model Admin {
   reservations    Reservation[]
   user            User[]
   rating          Rating[]
-  notifi          Notification[]
+  notifi          Notifi[]
   hero            Hero[]
 }
 
@@ -45,7 +45,7 @@ model User {
   favoriteIds       String[] @db.ObjectId
   accounts          Account[]
   reservations      Reservation[]
-  notifi            Notification[]
+  notifi            Notifi[]
   rating            Rating[]
   adminId           String?     @db.ObjectId
   admin             Admin?      @relation(fields: [adminId], references: [id], onDelete: Cascade)
@@ -83,7 +83,7 @@ model Listing {
   discount        Int?
   imagePromo      String?
   reservations    Reservation[]
-  notifi          Notification[]
+  notifi          Notifi[]
   rating          Rating[]
   adminId         String     @db.ObjectId
   admin           Admin      @relation(fields: [adminId], references: [id], onDelete: Cascade)
@@ -101,7 +101,7 @@ model Reservation {
   guestName       String?
   guestImage      String?
   createdAt       DateTime @default(now())
-  notifi          Notification[]
+  notifi          Notifi[]
   rating          Rating[]
   user            User? @relation(fields: [userId], references: [id], onDelete: Cascade)
   listing         Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
@@ -110,7 +110,7 @@ model Reservation {
 
 }
 
-model Notification{
+model Notifi{
   id              String        @id @default(auto()) @map("_id") @db.ObjectId
   userId          String?        @db.ObjectId
   listingId       String?        @db.ObjectId  

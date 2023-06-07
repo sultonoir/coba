@@ -92,60 +92,38 @@ const ListingClient: React.FC<ListingClientProps> = ({
   useEffect(() => {
     if (dateRange.startDate && dateRange.endDate) {
       const dayCount = differenceInDays(dateRange.endDate, dateRange.startDate);
-      if (dayCount && listing.price && rooms) {
+      if (dayCount && listing.price && rooms && rooms >= 0) {
         let calculatedPrice = dayCount * listing.price * rooms;
 
-        if (listing.discount && listing.discount > 0) {
-          const discountAmount =
-            (listing.discount / 100) * calculatedPrice * rooms;
-          calculatedPrice -= discountAmount;
-        }
-
         setTotalPrice(calculatedPrice);
-      } else {
-        setTotalPrice(listing.price * rooms);
+      }
+      if (
+        listing.price &&
+        rooms &&
+        rooms >= 0 &&
+        listing.discount &&
+        listing.discount > 0
+      ) {
+        const price = listing.price * (listing.discount / 100);
+        const discount = listing.price - price;
+        const discountAmount = discount * rooms;
+        setTotalPrice(discountAmount);
+      }
+      if (
+        dayCount &&
+        listing.price &&
+        rooms &&
+        rooms >= 0 &&
+        listing.discount &&
+        listing.discount > 0
+      ) {
+        const price = listing.price * (listing.discount / 100);
+        const discount = listing.price - price;
+        const discountAmount = dayCount * discount * rooms;
+        setTotalPrice(discountAmount);
       }
     }
   }, [dateRange, listing.price, listing.discount, rooms]);
-
-  const adminReservations = useCallback(() => {
-    if (!admin) {
-      return loginModal.onOpen();
-    }
-    setIsLoading(true);
-
-    axios
-      .post("/api/reservations", {
-        totalPrice: totalPrice,
-        startDate: dateRange.startDate,
-        endDate: dateRange.endDate,
-        listingId: listing?.id,
-        guestName: admin.name,
-        guestImage: admin.image,
-        adminId: admin.id,
-        status: "success",
-        rooms,
-      })
-      .then(() => {
-        toast.success("Berhasil mereservasi");
-        setDateRange(initialDateRange);
-        router.push("/payment");
-      })
-      .catch(() => {
-        toast.error("Something went wrong.");
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [
-    totalPrice,
-    dateRange,
-    listing?.id,
-    router,
-    currentUser,
-    loginModal,
-    initialDateRange,
-  ]);
 
   const body = (
     <div className="p-4">
@@ -200,27 +178,16 @@ const ListingClient: React.FC<ListingClientProps> = ({
                 md:col-span-3
               "
             >
-              {currentUser ? (
-                <ListingReservation
-                  price={listing.price}
-                  totalPrice={totalPrice}
-                  onChangeDate={(value) => setDateRange(value)}
-                  dateRange={dateRange}
-                  onSubmit={onCreateReservation}
-                  disabled={isLoading}
-                  body={body}
-                />
-              ) : (
-                <AdminReservation
-                  price={listing.price}
-                  totalPrice={totalPrice}
-                  onChangeDate={(value) => setDateRange(value)}
-                  dateRange={dateRange}
-                  onSubmit={adminReservations}
-                  disabled={isLoading}
-                  body={body}
-                />
-              )}
+              <ListingReservation
+                price={listing.price}
+                totalPrice={totalPrice}
+                onChangeDate={(value) => setDateRange(value)}
+                dateRange={dateRange}
+                onSubmit={onCreateReservation}
+                disabled={isLoading}
+                discount={listing.discount}
+                body={body}
+              />
             </div>
           </div>
         </div>

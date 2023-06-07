@@ -1,16 +1,10 @@
-import {
-  Listing,
-  Reservation,
-  User,
-  Notification,
-  Admin,
-} from "@prisma/client";
+import { Listing, Reservation, User, Notifi, Admin } from "@prisma/client";
 
 export type SafeListing = Omit<Listing, "createdAt"> & {
   createdAt: string;
 };
 
-export type SafeNotifications = Omit<Notification, "createdAt"> & {
+export type SafeNotifications = Omit<Notifi, "createdAt"> & {
   createdAt: string;
 };
 
@@ -38,7 +32,7 @@ export type SafeUserNotif = Omit<
 > & {
   createdAt: string;
   updatedAt: string;
-  notifi: Notification[];
+  notifi: Notifi[];
 };
 
 export type SafeAdmin = Omit<
@@ -55,7 +49,7 @@ export type SafeAdminNotif = Omit<
 > & {
   createdAt: string;
   updatedAt: string;
-  notifi: Notification[];
+  notifi: Notifi[];
 };
 
 export interface NavItem {
