@@ -55,6 +55,9 @@ export const GET = async (req: NextRequest) => {
         listing: true,
         user: true,
       },
+      orderBy: {
+        createdAt: "asc",
+      },
     });
     return NextResponse.json(reservations);
   } catch (error) {
