@@ -12,7 +12,7 @@ export async function POST(request: Request) {
       line_items: [
         {
           price_data: {
-            currency: "usd",
+            currency: "idr",
             product_data: {
               name: title,
               images: image,

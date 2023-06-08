@@ -69,9 +69,9 @@ const ListingCard: React.FC<ListingCardProps> = ({
   );
 
   const price = useMemo(() => {
-    const formatter = new Intl.NumberFormat("us-US", {
+    const formatter = new Intl.NumberFormat("id-ID", {
       style: "currency",
-      currency: "USD",
+      currency: "IDR",
     });
 
     if (reservation) {
@@ -84,9 +84,9 @@ const ListingCard: React.FC<ListingCardProps> = ({
   }, [reservation, data.price]);
 
   const priceDiscount = useMemo(() => {
-    const formatter = new Intl.NumberFormat("us-US", {
+    const formatter = new Intl.NumberFormat("id-ID", {
       style: "currency",
-      currency: "USD",
+      currency: "IDR",
     });
 
     if (data.discount) {

@@ -184,7 +184,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ listings }) => {
   return (
     <Modal
       onSubmit={handleSubmit(onSubmit)}
-      onClose={reserv.onOpen}
+      onClose={reserv.onClose}
       isOpen={reserv.isOpen}
       actionLabel={actionLabel}
       secondaryActionLabel={secondaryActionLabel}

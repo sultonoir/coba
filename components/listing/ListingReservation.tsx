@@ -25,16 +25,16 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
   discount,
 }) => {
   console.log(discount);
-  const formatter = new Intl.NumberFormat("us-US", {
+  const formatter = new Intl.NumberFormat("id-ID", {
     style: "currency",
-    currency: "USD",
+    currency: "IDR",
   });
   const priceRupiah = formatter.format(price);
 
   const priceDiscount = useMemo(() => {
-    const formatter = new Intl.NumberFormat("us-US", {
+    const formatter = new Intl.NumberFormat("id-ID", {
       style: "currency",
-      currency: "USD",
+      currency: "IDR",
     });
 
     if (discount) {

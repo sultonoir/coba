@@ -62,6 +62,9 @@ const SuccessClient = ({ params }: { params: Iparams }) => {
               Thank you for your payment. Your transaction has been successfully
               processed.
             </p>
+            <p className="text-primary text-center">
+              tell the receptionist your email for check in
+            </p>
             <button
               onClick={() => router.push("/")}
               className="bg-rose-500 hover:bg-rose-600 text-white font-bold px-4 py-2 rounded-md mt-4 focus:outline-none"

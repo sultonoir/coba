@@ -56,7 +56,7 @@ export const GET = async (req: NextRequest) => {
         user: true,
       },
       orderBy: {
-        createdAt: "asc",
+        createdAt: "desc",
       },
     });
     return NextResponse.json(reservations);

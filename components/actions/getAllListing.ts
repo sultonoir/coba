@@ -4,7 +4,7 @@ export const getAllListing = async () => {
   try {
     const listings = await prisma.listing.findMany({
       orderBy: {
-        createdAt: "desc",
+        price: "asc",
       },
     });
     const safeListings = listings.map((listing) => ({

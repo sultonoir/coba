@@ -47,7 +47,7 @@ const InputPercentage: React.FC<InputPercentageProps> = ({
           ${errors[id] ? "focus:border-rose-500" : ""}
         `}
       />
-      <span className="absolute top-[19px] right-[10px] text-secondary">%</span>
+      <span className="absolute top-[19px] right-[10px] text-primary">%</span>
     </label>
   );
 };
