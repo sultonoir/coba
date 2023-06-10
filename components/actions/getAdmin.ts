@@ -19,7 +19,11 @@ export default async function getAdmin() {
         email: session.user.email as string,
       },
       include: {
-        notifi: true,
+        notifi: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
       },
     });
 

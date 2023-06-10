@@ -37,7 +37,7 @@ export const authOptions: AuthOptions = {
 
         if (user) {
           if (!user || !user?.hashedPassword) {
-            throw new Error("user tidak ditemukan");
+            throw new Error("User not found");
           }
           const isPasswordValid = await bcrypt.compare(
             credentials.password,
@@ -47,7 +47,7 @@ export const authOptions: AuthOptions = {
           if (isPasswordValid) {
             return Promise.resolve(user);
           } else {
-            return Promise.reject(new Error("Password salah"));
+            return Promise.reject(new Error("Wrong password"));
           }
         } else if (admin) {
           if (!admin || !admin?.hashedPassword) {

@@ -107,7 +107,29 @@ export const columns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: () => <div className="text-center">Status</div>,
+    cell: ({ row }) => {
+      const status = row.getValue("status");
+      if (status === "success") {
+        return (
+          <p className="text-secondary px-2 py-1 rounded-lg bg-green-600 text-center">
+            success
+          </p>
+        );
+      } else if (status === "Completed") {
+        return (
+          <p className="text-secondary px-2 py-1 rounded-lg bg-blue-600 text-center">
+            Completed
+          </p>
+        );
+      } else {
+        return (
+          <p className="text-secondary px-2 py-1 rounded-lg bg-yellow-600 text-center">
+            Added ratings
+          </p>
+        );
+      }
+    },
   },
   {
     accessorKey: "title",
@@ -126,9 +148,9 @@ export const columns: ColumnDef<Payment>[] = [
     header: () => <div className="text-right">Amount</div>,
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("amount"));
-      const formatted = new Intl.NumberFormat("en-US", {
+      const formatted = new Intl.NumberFormat("id-ID", {
         style: "currency",
-        currency: "USD",
+        currency: "IDR",
       }).format(amount);
 
       return <div className="text-right font-medium">{formatted}</div>;
@@ -142,7 +164,7 @@ export const columns: ColumnDef<Payment>[] = [
       const onClick = useCallback(() => {
         axios
           .put(`/api/reservations/${payment.id}`, {
-            status: "Complete",
+            status: "Completed",
             reservationId: payment.id,
             room: payment.rooms,
             userId: payment.userId,

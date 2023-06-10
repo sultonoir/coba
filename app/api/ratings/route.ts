@@ -16,7 +16,7 @@ export const POST = async (req: Request) => {
         id: reservationId,
       },
       data: {
-        status: "Completed",
+        status: "Added ratings",
         rating: {
           create: {
             message,

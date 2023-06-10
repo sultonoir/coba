@@ -66,6 +66,7 @@ export default function Notifications({ currentUser }: NotificationsProps) {
     >
       <div>
         <Menu.Button
+          title="notification"
           onClick={onGet}
           className="p-3 border border-neutral-200 hover:shadow-md transition cursor-pointer rounded-full"
         >

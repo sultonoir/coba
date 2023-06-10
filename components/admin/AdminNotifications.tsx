@@ -81,6 +81,7 @@ const AdminNotifications: React.FC<AdminNotificationsProps> = ({ admin }) => {
     >
       <div>
         <Menu.Button
+          title="notification"
           onClick={onGet}
           className="p-3 border border-neutral-200 hover:shadow-md transition cursor-pointer rounded-full"
         >

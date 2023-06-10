@@ -43,7 +43,7 @@ const navbar: React.FC<navbarProps> = ({ currentUser, admin }) => {
                   <SearchIcon size={20} />
                 </button>
                 <button
-                  className="px-2 py-1 bg-rose-500 text-white hover:bg-rose-600 active:scale-90 transition rounded-lg"
+                  className="px-2 py-1 bg-rose-600 text-primary-foreground hover:bg-rose-500 active:scale-90 transition rounded-lg"
                   onClick={loginModal.onOpen}
                 >
                   Login
