@@ -17,6 +17,7 @@ import { Playfair_Display } from "next/font/google";
 import { IoBedOutline } from "react-icons/io5";
 import EditListingModal from "../modal/EditListingModal";
 import RatingsModal from "../modal/RatingsModal";
+import { DoorClosed } from "lucide-react";
 export const play = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-play",
@@ -239,6 +240,15 @@ const ListingCard: React.FC<ListingCardProps> = ({
                 />
                 <p className="text-neutral-500">{data.bed} Bed</p>
               </div>
+              {edit && (
+                <div className="flex flex-row items-center">
+                  <DoorClosed
+                    size={20}
+                    className="text-rose-500"
+                  />
+                  <p className="text-neutral-500">{data.roomCount} Rooms</p>
+                </div>
+              )}
             </div>
             {data.discount ? (
               <div className="flex flex-row items-center gap-1">
