@@ -3,6 +3,7 @@ import getCurrentUser from "../../components/actions/getCurrentUser";
 import EmptyState from "../../components/shared/EmptyState";
 import TripsClient from "./TripsClient";
 import { Metadata } from "next";
+import getReservations from "@/components/actions/getReservations";
 
 export const metadata: Metadata = {
   title: "Trips",
@@ -20,14 +21,12 @@ const TripsPage = async () => {
     );
   }
 
-  const complete = await getResrvStatus({ complete: currentUser?.id });
-  const completed = await getResrvStatus({ completed: currentUser?.id });
+  const history = await getReservations({ userId: currentUser.id });
 
   return (
     <TripsClient
       currentUser={currentUser}
-      complete={complete}
-      completed={completed}
+      history={history}
     />
   );
 };

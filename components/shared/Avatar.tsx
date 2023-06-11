@@ -12,9 +12,13 @@ const Avatar = ({ src }: AvatarProps) => {
       width={40}
       height={40}
       src={src || `/placeholder.jpg`}
-      className="rounded-full"
+      className="rounded-full aspect-square"
       placeholder="blur"
       blurDataURL="URL"
+      priority
+      quality={100}
+      sizes="100%"
+      style={{ objectFit: "cover" }}
     />
   );
 };

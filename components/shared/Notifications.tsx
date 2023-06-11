@@ -18,7 +18,6 @@ interface NotificationsProps {
 export default function Notifications({ currentUser }: NotificationsProps) {
   const [data, setData] = useState(currentUser);
   const [isloading, setIsloading] = useState(false);
-  console.log(data);
   useEffect(() => {
     const showNotification = (message: any) => {
       new Notification(message);

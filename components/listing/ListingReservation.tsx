@@ -24,7 +24,6 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
   body,
   discount,
 }) => {
-  console.log(discount);
   const formatter = new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",

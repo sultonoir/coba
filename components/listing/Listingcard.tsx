@@ -151,13 +151,13 @@ const ListingCard: React.FC<ListingCardProps> = ({
   };
 
   const onCompleted = useCallback(() => {
-    if (reservation?.status === "Complete") {
+    if (reservation?.status === "Completed") {
       handleRatingModals();
     }
   }, [reservation?.status]);
 
   const labelCompletd = useMemo(() => {
-    if (reservation?.status === "Complete") {
+    if (reservation?.status === "Completed") {
       return "Give ratings";
     }
   }, [reservation?.status]);

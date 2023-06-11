@@ -1,4 +1,5 @@
 "use client";
+import RentInput from "@/components/inputs/RentInput";
 import ListingCard from "@/components/listing/Listingcard";
 import { SafeListing } from "@/types";
 import axios from "axios";
@@ -31,19 +32,24 @@ const PropertiClient: React.FC<PropertiClientProps> = ({ listings }) => {
     [router]
   );
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-8 gap-5 mt-6">
-      {listings.map((listing) => (
-        <ListingCard
-          data={listing}
-          key={listing.id}
-          disabled={deletingId === listing.id}
-          onAction={onCancel}
-          actionLabel="Delete Property"
-          actionId={listing.id}
-          edit
-        />
-      ))}
-    </div>
+    <>
+      <div className="mb-5">
+        <RentInput />
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-8 gap-5 mt-6">
+        {listings.map((listing) => (
+          <ListingCard
+            data={listing}
+            key={listing.id}
+            disabled={deletingId === listing.id}
+            onAction={onCancel}
+            actionLabel="Delete Property"
+            actionId={listing.id}
+            edit
+          />
+        ))}
+      </div>
+    </>
   );
 };
 

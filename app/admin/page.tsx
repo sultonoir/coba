@@ -2,6 +2,14 @@ import getAdmin from "@/components/actions/getAdmin";
 import EmptyState from "@/components/shared/EmptyState";
 import React from "react";
 import AdminClient from "./AdminClient";
+import Container from "@/components/shared/Container";
+import { Metadata } from "next";
+import getListingAdmin from "@/components/actions/getlListingsAdmin";
+import getPromosi from "@/components/actions/getPromosi";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+};
 
 const page = async () => {
   const admin = await getAdmin();
@@ -14,11 +22,16 @@ const page = async () => {
       />
     );
   }
+  const listings = await getListingAdmin({ adminId: admin.id });
+  const promosi = await getPromosi();
 
   return (
-    <div className="container mx-auto py-10">
-      <AdminClient />
-    </div>
+    <Container>
+      <AdminClient
+        rooms={listings}
+        promosi={promosi}
+      />
+    </Container>
   );
 };
 

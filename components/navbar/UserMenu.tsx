@@ -14,9 +14,9 @@ import { MdOutlinePayments } from "react-icons/md";
 import Notifications from "../shared/Notifications";
 import { GoHistory } from "react-icons/go";
 import { VscSettings } from "react-icons/vsc";
-import { LucideHistory } from "lucide-react";
+import { BedDouble, LucideHistory, Martini } from "lucide-react";
 import { SearchIcon } from "lucide-react";
-import { Button } from "../ui/button";
+
 import useSearchModal from "@/hooks/useSearchModal";
 
 interface UserMenuProps {
@@ -62,6 +62,40 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
           <div className="p-1">
             {currentUser ? (
               <>
+                <div className="block sm:hidden">
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        onClick={() => router.push("/payment")}
+                        className={`${
+                          active ? "bg-rose-500 text-white" : "text-primary"
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                      >
+                        <Martini
+                          size={24}
+                          className="pr-2"
+                        />
+                        Facilities
+                      </button>
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <button
+                        onClick={() => router.push("/payment")}
+                        className={`${
+                          active ? "bg-rose-500 text-white" : "text-primary"
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                      >
+                        <BedDouble
+                          size={24}
+                          className="pr-2"
+                        />
+                        Rooms
+                      </button>
+                    )}
+                  </Menu.Item>
+                </div>
                 <Menu.Item>
                   {({ active }) => (
                     <button

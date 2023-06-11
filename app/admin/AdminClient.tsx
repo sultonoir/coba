@@ -1,12 +1,21 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
 import useData from "@/hooks/useData";
 import Loader from "@/components/shared/Loader";
 import EmptyState from "@/components/shared/EmptyState";
+import AdminDatepick from "@/components/admin/AdminDatepick";
+import { SafeListing } from "@/types";
+import { Hero } from "@prisma/client";
+import AdminDashboard from "@/components/admin/AdminDashboard";
 
-const AdminClient = () => {
+interface AdminClientProps {
+  rooms: SafeListing[];
+  promosi: Hero[];
+}
+
+const AdminClient: React.FC<AdminClientProps> = ({ rooms, promosi }) => {
   const { data, error, isLoading } = useData("/api/reservAdmin");
 
   if (isLoading) {
@@ -31,12 +40,17 @@ const AdminClient = () => {
     created: data.createdAt,
   }));
   return (
-    <div>
+    <>
+      <AdminDashboard
+        reservation={datas}
+        rooms={rooms}
+        promosi={promosi}
+      />
       <DataTable
         columns={columns}
         data={datas}
       />
-    </div>
+    </>
   );
 };
 
