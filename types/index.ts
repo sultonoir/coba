@@ -61,12 +61,8 @@ export interface NavItem {
 
 export const adminNav = [
   {
-    title: "Home",
+    title: "Dashboard",
     href: "/admin",
-  },
-  {
-    title: "Properti",
-    href: "/admin/properti",
   },
 ];
 

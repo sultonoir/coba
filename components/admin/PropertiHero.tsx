@@ -31,7 +31,7 @@ const PropertiHero: React.FC<PropertiClientProps> = ({ promosi }) => {
       >
         Upload
       </Button>
-      <div className="flex flex-col gap-5 h-[500px]">
+      <div className="flex flex-col gap-5">
         <div className="grid grid-cols-1 sm:grid-cols-8 gap-5 mt-6">
           {promosi.map((promo) => (
             <div
