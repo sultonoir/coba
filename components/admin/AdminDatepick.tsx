@@ -86,6 +86,12 @@ const AdminDatepick: React.FC<reservations> = ({ reservation }) => {
   const allPrice = totalAllPrice(reservationNow);
   const revenueNow = formatter.format(allPrice);
 
+  const [datePick] = item.map((i) => {
+    const newDate = new Date(i.created);
+    const formatDate = format(newDate, "PPP");
+    return formatDate;
+  });
+
   return (
     <div className="w-full">
       <div className="flex justify-between">
@@ -161,6 +167,7 @@ const AdminDatepick: React.FC<reservations> = ({ reservation }) => {
                 <p>RP.</p>
               </div>
               <p className="text-xl font-bold">{revenueDatePick}</p>
+              <p className="text-muted-foreground">{datePick}</p>
             </div>
           </div>
         )}

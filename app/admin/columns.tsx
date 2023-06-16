@@ -170,7 +170,7 @@ export const columns: ColumnDef<Payment>[] = [
             userId: payment.userId,
           })
           .then(() => {
-            toast.success("Complete");
+            toast.success("Completed");
             router.refresh();
           })
           .catch((error) => {
