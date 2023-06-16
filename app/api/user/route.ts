@@ -33,7 +33,11 @@ export const POST = async (request: Request) => {
         notification,
       },
       include: {
-        notifi: true,
+        notifi: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
       },
     });
 

@@ -45,7 +45,11 @@ export const POST = async (req: Request) => {
         id: user.adminId,
       },
       include: {
-        notifi: true,
+        notifi: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
       },
     });
     pusherServer.trigger("getR", "newratings", notifications);

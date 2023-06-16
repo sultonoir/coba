@@ -92,7 +92,11 @@ export const PUT = async (request: Request) => {
         id: currentUser.adminId,
       },
       include: {
-        notifi: true,
+        notifi: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
       },
     });
 
