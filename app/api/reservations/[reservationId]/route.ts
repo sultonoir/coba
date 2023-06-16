@@ -67,7 +67,7 @@ export async function PUT(request: Request, { params }: { params: IParams }) {
         },
       },
     };
-    if (status !== "Completed") {
+    if (update.status !== "Completed") {
       update.user = {
         update: {
           notifi: {
