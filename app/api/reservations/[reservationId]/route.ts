@@ -67,21 +67,19 @@ export async function PUT(request: Request, { params }: { params: IParams }) {
         },
       },
     };
-    if (update.status !== "Completed") {
-      update.user = {
-        update: {
-          notifi: {
-            create: {
-              message:
-                "thank you for staying at our hotel, don't forget to give ratings",
-              guestName: admin.name,
-              guestImage: admin.image,
-            },
+    update.user = {
+      update: {
+        notifi: {
+          create: {
+            message:
+              "thank you for staying at our hotel, don't forget to give ratings",
+            guestName: admin.name,
+            guestImage: admin.image,
           },
-          notification: true,
         },
-      };
-    }
+        notification: true,
+      },
+    };
   } else {
     update.status = status;
     update.listing = {
