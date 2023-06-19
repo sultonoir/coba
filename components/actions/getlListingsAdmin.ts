@@ -19,10 +19,12 @@ export default async function getListingAdmin(params: IParams) {
     },
   });
 
-  const safeListings = listings.map((listing) => ({
-    ...listing,
-    createdAt: listing.createdAt.toISOString(),
-  }));
+  const safeListings = listings
+    .filter((listing) => listing.roomCount !== 0)
+    .map((listing) => ({
+      ...listing,
+      createdAt: listing.createdAt.toISOString(),
+    }));
 
   return safeListings;
 }
