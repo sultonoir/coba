@@ -118,7 +118,7 @@ const EditListingModal = ({
       />
       <Button
         onClick={() => onStepClick(STEPS.INFO)}
-        label="Info"
+        label="Info kamar"
         outline
         small
       />

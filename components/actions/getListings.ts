@@ -34,10 +34,12 @@ export default async function getListings(params: IListingsParams) {
       },
     });
 
-    const safeListings = listings.map((listing) => ({
-      ...listing,
-      createdAt: listing.createdAt.toISOString(),
-    }));
+    const safeListings = listings
+      .filter((listing) => listing.roomCount !== 0)
+      .map((listing) => ({
+        ...listing,
+        createdAt: listing.createdAt.toISOString(),
+      }));
 
     return safeListings;
   } catch (error: any) {

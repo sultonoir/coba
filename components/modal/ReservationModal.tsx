@@ -78,12 +78,14 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ listings }) => {
     setIsLoading(true);
     axios
       .post("/api/reservAdmin", data)
-      .then(() => {
+      .then((e) => {
         toast.success("Reservations Created");
         router.refresh();
         reset();
         setStep(STEPS.CATEGORY);
         reserv.onClose();
+        const data = e.data.url;
+        window.location.href = data;
       })
       .catch((error: any) => {
         toast.error(error);
@@ -112,6 +114,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({ listings }) => {
   }, [step]);
 
   const listing = watch("listing");
+  console.log(listing);
 
   let bodyContent = (
     <div className="flex flex-col gap-8">
